@@ -1,0 +1,44 @@
+# ───── node_modules（依存パッケージ）─────
+node_modules/
+
+# ───── 環境変数ファイル（機密情報）─────
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# ───── ログ・キャッシュ・ビルド成果物など ─────
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+dist/
+build/
+.cache/
+.next/
+
+# ───── テスト関連 ─────
+coverage/
+.vitest/
+
+# ───── Prisma 関連（バイナリやビルド成果物）─────
+prisma/dev.db
+prisma/migrations/dev/
+*.sqlite
+*.db
+*.db-journal
+
+# ───── Docker 関連（エントリポイントなど）─────
+**/docker-entrypoint.sh
+docker-compose.override.yml
+
+# ───── OS依存ファイル・エディタ関連 ─────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ───── その他ログや一時ファイル─────
+*.log
+*.tmp
