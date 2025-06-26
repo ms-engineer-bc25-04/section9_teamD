@@ -1,3 +1,4 @@
+// 実際のフォーム部分（入力・ボタンなど）
 "use client"
 
 import type React from "react"

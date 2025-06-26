@@ -1,3 +1,4 @@
+// UI部品を組み合わせてログイン画面を作ってるメインパーツ
 "use client"
 
 import { useState } from "react"
