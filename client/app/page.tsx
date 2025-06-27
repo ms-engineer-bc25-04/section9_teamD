@@ -1,11 +1,9 @@
-import { Button } from "@/components/ui/button";
+import { AuthCard } from "@/components/auth-card"
 
-export default function Home() {
+export default function Page() {
   return (
-    <main className="flex min-h-screen items-center justify-center flex-col gap-4">
-      <h1 className="text-3xl font-bold text-gray-800">shadcn/ui ボタンテスト</h1>
-      <Button>こんにちは！</Button>
-    </main>
-  );
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <AuthCard />
+    </div>
+  )
 }
-
