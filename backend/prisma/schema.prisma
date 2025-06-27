@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String                @id @default(uuid()) @db.Char(36)
+  name               String                @db.VarChar(255)
+  email              String                @unique @db.VarChar(255)
+  passwordHash       String                @db.VarChar(255)
+  role               String                @db.VarChar(50)
+  isAdmin            Boolean
+  createdAt          DateTime              @default(now())
+
+  children           Child[]
+  eventApplications  EventApplication[]
+  points             Point[]
+  fromStamps         Stamp[]               @relation("FromUser")
+  toStamps           Stamp[]               @relation("ToUser")
+  rewardApplications RewardApplication[]
+  privileges         Privilege[]
+  paymentMethods     PaymentMethod[]
+  eventsCreated      Event[]               @relation("CreatedBy")
+}
+
+model Child {
+  id               String  @id @default(uuid()) @db.Char(36)
+  userId           String  @db.Char(36)
+  name             String  @db.VarChar(255)
+  className        String  @db.VarChar(100)
+  profileImageUrl  String? @db.VarChar(255)
+
+  user             User    @relation(fields: [userId], references: [id])
+}
+
+model Event {
+  id           String                @id @default(uuid()) @db.Char(36)
+  title        String                @db.VarChar(255)
+  description  String                @db.Text
+  date         DateTime
+  capacity     Int
+  deadline     DateTime
+  pointReward  Int
+  createdById  String                @db.Char(36)
+
+  createdBy    User                  @relation("CreatedBy", fields: [createdById], references: [id])
+  applications EventApplication[]
+  points       Point[]
+  stamps       Stamp[]
+  privileges   Privilege[]
+}
+
+model EventApplication {
+  id         String   @id @default(uuid()) @db.Char(36)
+  eventId    String   @db.Char(36)
+  userId     String   @db.Char(36)
+  status     String   @db.VarChar(20)
+  appliedAt  DateTime @default(now())
+
+  event      Event    @relation(fields: [eventId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Point {
+  id         String   @id @default(uuid()) @db.Char(36)
+  userId     String   @db.Char(36)
+  eventId    String   @db.Char(36)
+  points     Int
+  grantedAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id])
+  event      Event    @relation(fields: [eventId], references: [id])
+}
+
+model Stamp {
+  id           String   @id @default(uuid()) @db.Char(36)
+  eventId      String   @db.Char(36)
+  fromUserId   String?  @db.Char(36)
+  toUserId     String   @db.Char(36)
+  sentAt       DateTime @default(now())
+
+  event        Event    @relation(fields: [eventId], references: [id])
+  fromUser     User?    @relation("FromUser", fields: [fromUserId], references: [id])
+  toUser       User     @relation("ToUser", fields: [toUserId], references: [id])
+}
+
+model Reward {
+  id              String  @id @default(uuid()) @db.Char(36)
+  name            String  @db.VarChar(255)
+  description     String  @db.Text
+  pointsRequired  Int
+
+  applications    RewardApplication[]
+}
+
+model RewardApplication {
+  id           String   @id @default(uuid()) @db.Char(36)
+  userId       String   @db.Char(36)
+  rewardId     String   @db.Char(36)
+  status       String   @db.VarChar(20)
+  requestedAt  DateTime @default(now())
+
+  user         User     @relation(fields: [userId], references: [id])
+  reward       Reward   @relation(fields: [rewardId], references: [id])
+}
+
+model Privilege {
+  id          String   @id @default(uuid()) @db.Char(36)
+  userId      String   @db.Char(36)
+  eventId     String   @db.Char(36)
+  status      String   @db.VarChar(20)
+  grantedAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id])
+  event       Event    @relation(fields: [eventId], references: [id])
+}
+
+model PaymentMethod {
+  id                     String  @id @default(uuid()) @db.Char(36)
+  userId                String  @db.Char(36)
+  stripeCustomerId      String  @db.VarChar(255)
+  stripePaymentMethodId String  @db.VarChar(255)
+  isActive              Boolean
+
+  user                  User    @relation(fields: [userId], references: [id])
+}
