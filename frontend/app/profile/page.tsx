@@ -5,8 +5,10 @@ import { Header } from "@/components/layout/header"
 import { MobileNav } from "@/components/layout/mobile-nav"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { User, School } from "lucide-react" // アイコンをインポート
-import { getUserProfile } from "@/actions/user" // Server Actionをインポート
+import { Button } from "@/components/ui/button" // 🔽 追加
+import { User, School } from "lucide-react"
+import { getUserProfile } from "@/actions/user"
+import { signOut } from "next-auth/react" // 🔽 追加
 
 interface UserProfile {
   id: string
@@ -20,8 +22,7 @@ export default function ProfilePage() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  // デモ用のユーザーID (実際には認証システムから取得)
-  const userId = "user1"
+  const userId = "user1" // デモ用のユーザーID
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -79,6 +80,13 @@ export default function ProfilePage() {
                 <p className="text-sm text-muted-foreground">クラス</p>
                 <p className="font-medium text-lg">{userProfile.childClass}</p>
               </div>
+            </div>
+
+            {/* 🔽 ここにログアウトボタン追加 */}
+            <div className="pt-4 border-t border-border">
+              <Button variant="destructive" className="w-full" onClick={() => signOut()}>
+                ログアウト
+              </Button>
             </div>
           </CardContent>
         </Card>
