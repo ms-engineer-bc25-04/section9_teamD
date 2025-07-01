@@ -3,5 +3,6 @@ export default function Home() {
     <main>
       <h1>ホームページ</h1>
     </main>
-  )
+  );
 }
+
