@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 29 100% 95%; /* #FFFAE6 (やさしい背景色) */
+    --foreground: 238 15% 32%; /* #494561 (読みやすい濃グレー) */
+
+    --card: 0 0% 100%; /* Default white for cards */
+    --card-foreground: 238 15% 32%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 238 15% 32%;
+    --primary: 228 70% 56%; /* #3F67E1 (ボタン・リンク) */
+    --primary-foreground: 0 0% 98%; /* White text on primary */
+    --secondary: 250 50% 76%; /* #A595E0 (装飾・サブ要素) */
+    --secondary-foreground: 238 15% 32%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 238 15% 50%;
+    --accent: 318 48% 67%; /* #D782B7 (通知・強調) */
+    --accent-foreground: 238 15% 32%;
+    --destructive: 0 84.2% 60.2%; /* Default red for destructive */
+    --destructive-foreground: 0 0% 98%;
+    --border: 238 15% 85%;
+    --input: 238 15% 85%;
+    --ring: 238 15% 32%;
+    --radius: 0.5rem;
+
+    /* Custom colors for direct use if needed, though Tailwind classes are preferred */
+    --color-pink: 318 48% 67%; /* #D782B7 */
+    --color-blue: 228 70% 56%; /* #3F67E1 */
+    --color-yellow: 45 78% 54%; /* #E5C22B */
+    --color-purple: 250 50% 76%; /* #A595E0 */
+  }
+
+  .dark {
+    /* Dark mode colors (using default shadcn values as no specific dark mode palette was provided) */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 5.9% 10%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-rounded); /* Apply the rounded font */
+  }
+}
