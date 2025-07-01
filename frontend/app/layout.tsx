@@ -23,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja" suppressHydrationWarning>
-      <body className={`${mPlusRounded1c.variable} font-rounded`}>
+      <body className={`${mPlusRounded1c.variable} font-rounded bg-[#fdf8ee]`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           {children}
         </ThemeProvider>

@@ -1,29 +1,29 @@
-import express from "express";
-import { PrismaClient } from "@prisma/client";
-import Redis from "ioredis";
-import { Request, Response } from "express";
-import "dotenv/config"; // これで .env が自動で読み込まれる
-import cors from "cors";
+import express, { RequestHandler } from 'express'; // ← RequestHandler を追加！
+import cors from 'cors';
+// ここを追加！
+import { requireAuth } from './middlewares/auth-middleware';
 
 const app = express();
 app.use(cors());
-const prisma = new PrismaClient();
-const redis = new Redis({
-  host: process.env.REDIS_HOST,
-  port: Number(process.env.REDIS_PORT),
-});
-
 app.use(express.json());
 
-app.get("/", async (req: Request, res: Response) => {
-  const cached = await redis.get("hello");
-  if (cached) return res.send(`Cached: ${cached}`);
+// 認証付きAPIに変更！
+app.get(
+  '/api/user/me',
+  // TypeScriptの型エラー回避のため as unknown as RequestHandler を付けている
+  requireAuth as unknown as RequestHandler,
+  (req, res) => {
+    // 認証されたユーザーだけがここに来る
+    res.json({
+      message: '認証OK！',
+      uid: (req as any).user.uid,        // FirebaseのユーザーID
+      email: (req as any).user.email,    // Firebaseのメールアドレス
+    });
+  }
+);
 
-  const message = "Hello from Express + Prisma + Redis!";
-  await redis.set("hello", message, "EX", 10);
-  res.send(message);
-});
-
-app.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
+// サーバー起動（4000番ポート、0.0.0.0でリッスン推奨）
+const PORT = 4000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
 });
