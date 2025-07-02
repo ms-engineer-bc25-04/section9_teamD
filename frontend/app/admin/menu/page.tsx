@@ -21,14 +21,14 @@ export default function AdminDashboard() {
       description: '新しいイベントを作成する',
       icon: Plus,
       color: 'bg-point-pink',
-      href: '/admin/events/create',
+      href: '/admin/events/new',
     },
     {
       title: 'イベント管理', // 2番目
       description: 'PTA活動やボランティアイベントの作成・編集',
       icon: Calendar,
       color: 'bg-point-blue',
-      href: '/admin/events',
+      href: '/admin/events/[id]/edit',
       count: 8,
       countLabel: 'アクティブ',
     },
@@ -46,14 +46,14 @@ export default function AdminDashboard() {
       description: '特定の保護者の優先権ステータスを確認・管理',
       icon: Star,
       color: 'bg-point-yellow',
-      href: '/admin/priority-holders',
+      href: '/admin/rewards',
     },
     {
       title: '決済管理', // 5番目
       description: 'アプリ利用料金の支払い設定',
       icon: CreditCard,
       color: 'bg-point-purple',
-      href: '/admin/payment',
+      href: '/admin/card',
     },
   ]
 
