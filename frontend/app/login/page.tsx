@@ -41,7 +41,7 @@ export default function LoginPage() {
     await login(email, password);
      // ロールで分岐して遷移先を変える
     if (role === 0) {
-      router.push("/events"); // 保護者はここ
+      router.push("/"); // 保護者はここ
     } else {
       router.push("/admin/menu"); // 保育園はここ
     }
