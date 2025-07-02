@@ -1,27 +1,27 @@
-"use client" // クライアントコンポーネントとしてマーク
+'use client' // クライアントコンポーネントとしてマーク
 
-import { useState, useMemo, useEffect } from "react"
-import { ChevronLeft, ChevronRight, Calendar } from "lucide-react"
-import { Header } from "@/components/layout/header"
-import { MobileNav } from "@/components/layout/mobile-nav"
-import { EventCard } from "@/components/event-card"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { useSearchParams } from "next/navigation"
-import { getEvents } from "@/actions/events" // Server Actionのみインポート
-import type { Event } from "@/data/events"   // 型はdata/eventsから直接インポート
-import { getUserParticipatedEventIds } from "@/actions/participations" // 新しいServer Actionをインポート
+import { useState, useMemo, useEffect } from 'react'
+import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react'
+import { Header } from '@/components/layout/header'
+import { MobileNav } from '@/components/layout/mobile-nav'
+import { EventCard } from '@/components/event-card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { useSearchParams } from 'next/navigation'
+import { getEvents } from '@/actions/events' // Server Actionのみインポート
+import type { Event } from '@/data/events' // 型はdata/eventsから直接インポート
+import { getUserParticipatedEventIds } from '@/actions/participations' // 新しいServer Actionをインポート
 
 // EventCardのstatus型ガード
-const getEventStatus = (status: string): "募集中" | "募集前" | "終了" => {
-  if (status === "募集中" || status === "募集前" || status === "終了") return status
-  return "終了"
+const getEventStatus = (status: string): '募集中' | '募集前' | '終了' => {
+  if (status === '募集中' || status === '募集前' || status === '終了') return status
+  return '終了'
 }
 
 export default function EventListPage() {
   const searchParams = useSearchParams()
-  const initialYear = searchParams.get("year")
-  const initialMonth = searchParams.get("month") // 1-indexed month
+  const initialYear = searchParams.get('year')
+  const initialMonth = searchParams.get('month') // 1-indexed month
 
   const [currentMonth, setCurrentMonth] = useState(() => {
     if (initialYear && initialMonth) {
@@ -39,13 +39,16 @@ export default function EventListPage() {
   const [userParticipatedEventIds, setUserParticipatedEventIds] = useState<string[]>([]) // ユーザーの参加イベントIDリスト
 
   // デモ用のユーザーID (実際には認証システムから取得)
-  const userId = "user1"
+  const userId = 'user1'
 
   // イベントデータとユーザーの参加状況をロード
   useEffect(() => {
     const loadData = async () => {
       setIsLoadingEvents(true)
-      const [fetchedEvents, participatedIds] = await Promise.all([getEvents(), getUserParticipatedEventIds(userId)])
+      const [fetchedEvents, participatedIds] = await Promise.all([
+        getEvents(),
+        getUserParticipatedEventIds(userId),
+      ])
       setEvents(fetchedEvents)
       setUserParticipatedEventIds(participatedIds)
       setIsLoadingEvents(false)
@@ -131,9 +134,9 @@ export default function EventListPage() {
   }
 
   // 表示月のフォーマット
-  const formattedMonth = currentMonth.toLocaleDateString("ja-JP", {
-    year: "numeric",
-    month: "long",
+  const formattedMonth = currentMonth.toLocaleDateString('ja-JP', {
+    year: 'numeric',
+    month: 'long',
   })
 
   // フィルタリングされたイベントリスト
@@ -192,7 +195,7 @@ export default function EventListPage() {
 
                 {/* 曜日ヘッダー */}
                 <div className="grid grid-cols-7 gap-1 mt-4 text-sm">
-                  {["日", "月", "火", "水", "木", "金", "土"].map((day) => (
+                  {['日', '月', '火', '水', '木', '金', '土'].map((day) => (
                     <div key={day} className="p-2 font-semibold text-center">
                       {day}
                     </div>
@@ -208,8 +211,8 @@ export default function EventListPage() {
                               selectedDate.getFullYear() === currentMonth.getFullYear() &&
                               selectedDate.getMonth() === currentMonth.getMonth() &&
                               selectedDate.getDate() === date
-                                ? "bg-primary text-primary-foreground" // 選択された日付
-                                : ""
+                                ? 'bg-primary text-primary-foreground' // 選択された日付
+                                : ''
                             } ${
                               eventDatesInMonth.has(date) &&
                               !(
@@ -218,10 +221,10 @@ export default function EventListPage() {
                                 selectedDate.getMonth() === currentMonth.getMonth() &&
                                 selectedDate.getDate() === date
                               )
-                                ? "border-2 border-accent font-bold text-accent" // イベントがある日付 (選択されていない場合)
-                                : ""
+                                ? 'border-2 border-accent font-bold text-accent' // イベントがある日付 (選択されていない場合)
+                                : ''
                             }`
-                          : "" // 空白セル
+                          : '' // 空白セル
                       }`}
                       onClick={() => handleDateClick(date)}
                     >
@@ -253,8 +256,8 @@ export default function EventListPage() {
             ) : (
               <p className="text-center text-muted-foreground">
                 {selectedDate
-                  ? `${selectedDate.toLocaleDateString("ja-JP", { month: "long", day: "numeric" })}にイベントはありません。`
-                  : "この月にイベントはありません。"}
+                  ? `${selectedDate.toLocaleDateString('ja-JP', { month: 'long', day: 'numeric' })}にイベントはありません。`
+                  : 'この月にイベントはありません。'}
               </p>
             )}
           </div>
