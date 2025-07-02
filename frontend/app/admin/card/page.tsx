@@ -36,9 +36,6 @@ export default function CardRegisterPage() {
   // キャンセル
   const handleCancel = () => setShowForm(false);
 
-  // 幅の統一用変数
-  // const sectionWidth = 700;
-
   return (
     <div style={{ background: '#fcf6ea', minHeight: '100vh', padding: 24 }}>
       {/* ページタイトルとパンくず */}
