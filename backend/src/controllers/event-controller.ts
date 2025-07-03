@@ -92,3 +92,15 @@ export const updateEvent = async (req: Request, res: Response) => {
     res.status(500).json({ error: "イベント更新に失敗しました" });
   }
 };
+
+// 申込
+export const applyEvent = async (req: Request, res: Response) => {
+  // TODO: ここに申込ロジックを書く
+  res.status(201).json({ message: "イベント参加申込（ダミー）" });
+};
+
+// キャンセル
+export const cancelEvent = async (req: Request, res: Response) => {
+  // TODO: ここにキャンセルロジックを書く
+  res.status(200).json({ message: "イベント参加キャンセル（ダミー）" });
+};
