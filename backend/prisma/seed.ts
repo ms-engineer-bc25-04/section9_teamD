@@ -2,14 +2,25 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
+  // 1. Nurseryを先に作成
+  const nursery = await prisma.nursery.create({
+    data: {
+      name: 'テスト保育園'
+    }
+  });
+
+  // 2. nursery.idを使ってユーザーを作成
   // ユーザー1件
   await prisma.user.create({
     data: {
       email: 'ayaka@example.com',
-      passwordHash: 'hashedpassword', // パスワードはハッシュ化したダミー
+      passwordHash: 'hashedpassword',
       name: '中村あやか',
       role: 'parent',
       isAdmin: false,
+      nursery: {
+      connect: { id: nursery.id } // nurseryを必ず指定
+    }
     },
   });
   // 職員1件
@@ -20,6 +31,9 @@ async function main() {
       name: '高橋さやか',
       role: 'staff',
       isAdmin: true,
+      nursery: {
+      connect: { id: nursery.id } // nurseryを必ず指定
+    }
     },
   });
   // イベント1件
@@ -32,6 +46,10 @@ async function main() {
       deadline: new Date(),
       pointReward: 20,
       createdById: staffUser.id,
+      startTime: new Date(), // 必須
+      endTime: new Date(),   // 必須
+      location: '場所',      // 必須
+      privilegeAllowed: true // 必須
     },
   });
 }
