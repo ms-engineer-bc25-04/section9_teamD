@@ -1,36 +1,84 @@
 import { Request, Response } from "express";
 import prisma from "../../prisma/client";
 
+// GET イベント一覧取得
+export const getEvent = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    // prismaを使ってイベント一覧を取得
+    const events = await prisma.event.findUnique({
+      where: { id },
+    });
+
+    if (!events) {
+      return res.status(404).json({ error: "イベントが見つかりません" });
+    } else {
+      res.status(200).json(events);
+    }
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    res.status(500).json({ error: "イベントの取得に失敗しました" });
+  }
+};
+
 // POST 新規イベント作成
 export const createEvent = async (req: Request, res: Response) => {
-  const {
-    title,
-    description,
-    date,
-    startTime,
-    endTime,
-    location,
-    requiredItems,
-    specialNotes,
-    capacity,
-    deadline,
-    pointReward,
-    privilegeAllowed,
-    createdById,
-  } = req.body;
-
   try {
+    // リクエストボディから必要なデータを取得
+    const {
+      title,
+      description,
+      date,
+      startTime,
+      endTime,
+      location,
+      requiredItems,
+      specialNotes,
+      capacity,
+      deadline,
+      pointReward,
+      privilegeAllowed,
+      createdById,
+    } = req.body;
+
+    // バリデーション: 必須項目のチェック
+    if (
+      !title ||
+      !description ||
+      !date ||
+      !startTime ||
+      !location ||
+      !createdById
+    ) {
+      return res.status(400).json({ error: "必須項目が不足しています" });
+    }
+
+    // バリデーション: 日付と時間のフォーマットチェック
+    if (isNaN(new Date(date).getTime())) {
+      return res
+        .status(400)
+        .json({ error: "開催日のフォーマットが正しくありません" });
+    }
+    if (deadline && isNaN(new Date(deadline).getTime())) {
+      return res
+        .status(400)
+        .json({ error: "締切日のフォーマットが正しくありません" });
+    }
+
+    // prismaを使ってイベントを作成
     const newEvent = await prisma.event.create({
       data: {
         title,
         description,
         date: new Date(date),
-        startTime: new Date(startTime),
-        endTime: new Date(endTime),
+        startTime,
+        endTime,
         location,
-        deadline: new Date(deadline),
+        deadline: deadline ? new Date(deadline) : null,
         pointReward: Number(pointReward),
-        privilegeAllowed: Boolean(privilegeAllowed),
+        privilegeAllowed:
+          privilegeAllowed === "true" || privilegeAllowed === true,
         createdById,
 
         // 任意項目は条件付きで含める。存在するときだけ含める
@@ -40,10 +88,10 @@ export const createEvent = async (req: Request, res: Response) => {
       },
     });
 
-    res.status(201).json(newEvent);
+    return res.status(201).json(newEvent);
   } catch (error) {
     console.error("Error creating event:", error);
-    res.status(500).json({ error: "イベント更新に失敗しました" });
+    return res.status(500).json({ error: "イベント作成に失敗しました" });
   }
 };
 
