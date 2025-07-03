@@ -3,10 +3,14 @@ import cors from 'cors';
 // ここを追加！
 import { requireAuth } from './middlewares/auth-middleware';
 import rewardsRouter from './routes/rewards';
+// ルーティングのインポート
+import eventsRouter from './routes/events'; 
+
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use("/api/events", eventsRouter);
 
 // 認証付きAPIに変更！
 app.get(
@@ -28,4 +32,12 @@ app.use('/api/rewards', rewardsRouter);
 // サーバー起動（4000番ポート、0.0.0.0でリッスン推奨）
 app.listen(4000, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:4000`);
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
+app.get('/', (req, res) => {
+  res.send('Expressサーバーのトップページです！（APIサーバー本体）');
 });
