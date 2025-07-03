@@ -31,11 +31,13 @@ export function useAuth() {
       const cred = await signInWithEmailAndPassword(auth, email, password);
       setUser(cred.user);
     } catch (e: any) {
-      setError(e.message);
+      console.log(e.message);
     } finally {
       setLoading(false);
     }
   };
+
+
 
   // 新規登録
   const register = async (email: string, password: string) => {

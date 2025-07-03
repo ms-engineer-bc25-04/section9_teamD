@@ -2,6 +2,7 @@ import express, { RequestHandler } from 'express'; // ← RequestHandler を追�
 import cors from 'cors';
 // ここを追加！
 import { requireAuth } from './middlewares/auth-middleware';
+import rewardsRouter from './routes/rewards';
 
 const app = express();
 app.use(cors());
@@ -22,8 +23,9 @@ app.get(
   }
 );
 
+app.use('/api/rewards', rewardsRouter);
+
 // サーバー起動（4000番ポート、0.0.0.0でリッスン推奨）
-const PORT = 4000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(4000, '0.0.0.0', () => {
+  console.log(`Server running on http://localhost:4000`);
 });
