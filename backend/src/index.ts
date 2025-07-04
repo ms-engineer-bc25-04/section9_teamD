@@ -37,6 +37,14 @@ app.listen(4000, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:4000`);
 });
 
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
+app.get('/', (req, res) => {
+  res.send('Expressサーバーのトップページです！（APIサーバー本体）');
+});
+
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.error("Express Error:", err);
   res.status(500).json({ error: "Internal Server Error" });
