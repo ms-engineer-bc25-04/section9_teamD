@@ -1,3 +1,5 @@
+// TODO 認証入れる
+
 'use client'
 
 import type React from 'react'
@@ -14,13 +16,7 @@ import {
   ProfileCardTitle,
 } from '@/components/ui/profile-card'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+
 import { ArrowLeft, Calendar } from 'lucide-react'
 
 export default function CreateEvent() {
@@ -32,11 +28,10 @@ export default function CreateEvent() {
     startTime: '',
     endTime: '',
     location: '',
-    maxParticipants: '',
-    durationMinutes: '', // 所要時間（分）
-    totalPoints: '', // 合計ポイント
+    capacity: '',
+    pointReward: '', // 合計ポイント
     category: '',
-    requirements: '',
+    requiredItems: '',
     specialNotes: '', // 新しいフィールド
   })
 
@@ -65,10 +60,39 @@ export default function CreateEvent() {
     return cleaned.slice(0, 4)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // イベント作成処理
-    router.push('/admin/events')
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Authorization: `Bearer ${idToken}`, // トークンをヘッダーに追加
+      },
+      body: JSON.stringify({
+        title: formData.title,
+        description: formData.description,
+        date: formData.date,
+        startTime: formData.startTime,
+        endTime: formData.endTime,
+        location: formData.location,
+        capacity: formData.capacity ? Number(formData.capacity) : null, // 数値に変換
+        requiredItems: formData.requiredItems, // 任意項目
+        specialNotes: formData.specialNotes,
+        createdById: 'mock-user-id',
+        deadline: formData.date, // 必要なら
+        pointReward: Number(formData.pointReward), // 合計ポイントを数値に変換
+        privilegeAllowed: true,
+      }),
+    })
+
+    if (res.ok) {
+      alert('イベントが登録されました！')
+      router.push('/admin/menu')
+    } else {
+      console.error('イベント作成に失敗しました')
+      alert('イベントの作成に失敗しました。もう一度お試しください。')
+    }
   }
 
   const handleInputChange = (field: string, value: string) => {
@@ -87,14 +111,14 @@ export default function CreateEvent() {
     const formattedValue = formatTimeValue(e.target.value)
     setFormData((prev) => ({ ...prev, [field]: formattedValue }))
   }
-
+  console.log(`${process.env.NEXT_PUBLIC_API_URL}/api/events`)
   return (
     <div className="min-h-screen p-4">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center mb-6">
           <Button
             variant="ghost"
-            onClick={() => router.push('/admin')}
+            onClick={() => router.push('/admin/menu')}
             className="mr-4 text-main-text hover:bg-point-purple/10"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -123,22 +147,6 @@ export default function CreateEvent() {
                     required
                     className="border-point-purple/30 focus:border-point-blue"
                   />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="category">カテゴリー *</Label>
-                  <Select onValueChange={(value) => handleInputChange('category', value)}>
-                    <SelectTrigger className="border-point-purple/30 focus:border-point-blue">
-                      <SelectValue placeholder="カテゴリーを選択" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="volunteer">ボランティア活動</SelectItem>
-                      <SelectItem value="meeting">PTA会議</SelectItem>
-                      <SelectItem value="event">イベント準備</SelectItem>
-                      <SelectItem value="cleaning">清掃活動</SelectItem>
-                      <SelectItem value="other">その他</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </div>
 
                 <div className="space-y-2">
@@ -202,53 +210,39 @@ export default function CreateEvent() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="maxParticipants">募集人数</Label>
+                  <Label htmlFor="capacity">募集人数</Label>
                   <Input
-                    id="maxParticipants"
+                    id="capacity"
                     type="number"
-                    value={formData.maxParticipants}
-                    onChange={(e) => handleInputChange('maxParticipants', e.target.value)}
+                    value={formData.capacity}
+                    onChange={(e) => handleInputChange('capacity', e.target.value)}
                     placeholder="例：10"
                     className="border-point-purple/30 focus:border-point-blue"
                   />
                 </div>
 
                 {/* ポイント設定フィールド */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="durationMinutes">所要時間（分） *</Label>
-                    <Input
-                      id="durationMinutes"
-                      type="number"
-                      value={formData.durationMinutes}
-                      onChange={(e) => handleInputChange('durationMinutes', e.target.value)}
-                      placeholder="例：60"
-                      required
-                      className="border-point-purple/30 focus:border-point-blue"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="totalPoints">合計ポイント *</Label>
-                    <Input
-                      id="totalPoints"
-                      type="number"
-                      value={formData.totalPoints}
-                      onChange={(e) => handleInputChange('totalPoints', e.target.value)}
-                      placeholder="例：100"
-                      required
-                      className="border-point-purple/30 focus:border-point-blue"
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="pointReward">合計ポイント *</Label>
+                  <Input
+                    id="pointReward"
+                    type="number"
+                    value={formData.pointReward}
+                    onChange={(e) => handleInputChange('pointReward', e.target.value)}
+                    placeholder="例：100"
+                    required
+                    className="border-point-purple/30 focus:border-point-blue"
+                  />
                 </div>
-                <div className="md:col-span-2 text-sm text-main-text/60 mt-1">
-                  <p>ポイント計算の目安 (保護者側の30分区切り選択を想定):</p>
-                  <ul className="list-disc list-inside ml-4">
-                    <li>30分程度の作業: 10pt</li>
-                    <li>1時間 (60分) 程度の作業: 20pt</li>
-                    <li>1時間30分 (90分) 程度の作業: 30pt</li>
-                    <li>2時間 (120分) 程度の作業: 40pt</li>
-                  </ul>
-                </div>
+              </div>
+              <div className="md:col-span-2 text-sm text-main-text/60 mt-1">
+                <p>ポイント計算の目安 (保護者側の30分区切り選択を想定):</p>
+                <ul className="list-disc list-inside ml-4">
+                  <li>30分程度の作業: 10pt</li>
+                  <li>1時間 (60分) 程度の作業: 20pt</li>
+                  <li>1時間30分 (90分) 程度の作業: 30pt</li>
+                  <li>2時間 (120分) 程度の作業: 40pt</li>
+                </ul>
               </div>
 
               <div className="space-y-2">
@@ -265,11 +259,11 @@ export default function CreateEvent() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="requirements">持ち物</Label>
+                <Label htmlFor="requiredItems">持ち物</Label>
                 <Textarea
-                  id="requirements"
-                  value={formData.requirements}
-                  onChange={(e) => handleInputChange('requirements', e.target.value)}
+                  id="requiredItems"
+                  value={formData.requiredItems}
+                  onChange={(e) => handleInputChange('requiredItems', e.target.value)}
                   placeholder="例：動きやすい服装、軍手、飲み物"
                   rows={3}
                   className="border-point-purple/30 focus:border-point-blue"

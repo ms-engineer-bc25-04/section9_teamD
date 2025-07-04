@@ -1,9 +1,7 @@
 'use client'
 
-import type React from 'react'
-
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -14,17 +12,21 @@ import {
   ProfileCardTitle,
 } from '@/components/ui/profile-card'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { ArrowLeft, Calendar } from 'lucide-react'
 
-export default function CreateEvent() {
+export default function EditEvent() {
   const router = useRouter()
+  const params = useParams()
+  const eventIdRaw = params?.id
+  const eventId = Array.isArray(eventIdRaw) ? eventIdRaw[0] : eventIdRaw
+
+  useEffect(() => {
+    if (!eventId) {
+      router.push('/404')
+    }
+  }, [eventId, router])
+
+  // フォームデータの状態管理
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -32,32 +34,24 @@ export default function CreateEvent() {
     startTime: '',
     endTime: '',
     location: '',
-    maxParticipants: '',
-    durationMinutes: '', // 所要時間（分）
-    totalPoints: '', // 合計ポイント
-    category: '',
-    requirements: '',
-    specialNotes: '', // 新しいフィールド
+    capacity: '',
+    requiredItems: '',
+    specialNotes: '',
+    pointReward: '',
   })
 
-  // 日付の自動フォーマット関数
+  // フォーマット関数
   const formatDateValue = (value: string): string => {
-    const cleaned = value.replace(/\D/g, '') // 数字以外を削除
-    if (cleaned.length <= 4) {
-      return cleaned
-    } else if (cleaned.length <= 6) {
-      return `${cleaned.slice(0, 4)}-${cleaned.slice(4)}`
-    } else {
-      return `${cleaned.slice(0, 4)}-${cleaned.slice(4, 6)}-${cleaned.slice(6, 8)}`
-    }
+    const cleaned = value.replace(/\D/g, '')
+    if (cleaned.length <= 4) return cleaned
+    if (cleaned.length <= 6) return `${cleaned.slice(0, 4)}-${cleaned.slice(4)}`
+    return `${cleaned.slice(0, 4)}-${cleaned.slice(4, 6)}-${cleaned.slice(6, 8)}`
   }
 
-  // 時間の自動フォーマット関数
   const formatTimeValue = (value: string): string => {
-    const cleaned = value.replace(/\D/g, '') // 数字以外を削除
-    if (cleaned.length <= 2) {
-      return cleaned.padStart(2, '0')
-    } else if (cleaned.length <= 4) {
+    const cleaned = value.replace(/\D/g, '')
+    if (cleaned.length <= 2) return cleaned.padStart(2, '0')
+    if (cleaned.length <= 4) {
       const hours = cleaned.slice(0, cleaned.length - 2).padStart(2, '0')
       const minutes = cleaned.slice(cleaned.length - 2)
       return `${hours}:${minutes}`
@@ -65,27 +59,66 @@ export default function CreateEvent() {
     return cleaned.slice(0, 4)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // イベント作成処理
-    router.push('/admin/events')
-  }
+  // データ取得
+  useEffect(() => {
+    const fetchEvent = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${eventId}`)
+        if (!res.ok) {
+          throw new Error('イベント取得失敗')
+        }
+        const data = await res.json()
+        setFormData({
+          title: data.title || '',
+          description: data.description || '',
+          date: data.date ? data.date.slice(0, 10) : '',
+          startTime: data.startTime || '',
+          endTime: data.endTime || '',
+          location: data.location || '',
+          capacity: data.capacity?.toString() || '',
+          requiredItems: data.requiredItems || '',
+          specialNotes: data.specialNotes || '',
+          pointReward: data.pointReward?.toString() || '',
+        })
+      } catch (err) {
+        console.error(err)
+        alert('取得失敗')
+      }
+    }
 
+    if (eventId) fetchEvent()
+  }, [eventId])
+
+  // 入力変更
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleDateBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const formattedValue = formatDateValue(e.target.value)
-    setFormData((prev) => ({ ...prev, date: formattedValue }))
-  }
-
-  const handleTimeBlur = (
-    field: 'startTime' | 'endTime',
-    e: React.FocusEvent<HTMLInputElement>
-  ) => {
-    const formattedValue = formatTimeValue(e.target.value)
-    setFormData((prev) => ({ ...prev, [field]: formattedValue }))
+  // データ送信
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events/${eventId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          capacity: formData.capacity ? Number(formData.capacity) : null,
+          pointReward: formData.pointReward ? Number(formData.pointReward) : 0,
+        }),
+      })
+      if (res.ok) {
+        alert('更新完了！')
+        router.push('/admin/menu') // 更新後のリダイレクト
+      } else {
+        const error = await res.json()
+        console.error(error)
+        alert('更新失敗')
+      }
+    } catch (err) {
+      console.error(err)
+      alert('通信失敗')
+    }
   }
 
   return (
@@ -94,13 +127,13 @@ export default function CreateEvent() {
         <div className="flex items-center mb-6">
           <Button
             variant="ghost"
-            onClick={() => router.push('/admin')}
+            onClick={() => router.push('/admin/menu')}
             className="mr-4 text-main-text hover:bg-point-purple/10"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             管理ダッシュボードへ
           </Button>
-          <h1 className="text-2xl font-bold text-main-text">新しいイベントを作成</h1>
+          <h1 className="text-2xl font-bold text-main-text">イベントを編集</h1>
         </div>
 
         <ProfileCard>
@@ -119,74 +152,40 @@ export default function CreateEvent() {
                     id="title"
                     value={formData.title}
                     onChange={(e) => handleInputChange('title', e.target.value)}
-                    placeholder="例：運動会準備ボランティア"
                     required
-                    className="border-point-purple/30 focus:border-point-blue"
                   />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="category">カテゴリー *</Label>
-                  <Select onValueChange={(value) => handleInputChange('category', value)}>
-                    <SelectTrigger className="border-point-purple/30 focus:border-point-blue">
-                      <SelectValue placeholder="カテゴリーを選択" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="volunteer">ボランティア活動</SelectItem>
-                      <SelectItem value="meeting">PTA会議</SelectItem>
-                      <SelectItem value="event">イベント準備</SelectItem>
-                      <SelectItem value="cleaning">清掃活動</SelectItem>
-                      <SelectItem value="other">その他</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="date">開催日 *</Label>
                   <Input
                     id="date"
-                    type="text"
                     value={formData.date}
                     onChange={(e) => handleInputChange('date', e.target.value)}
-                    onBlur={handleDateBlur}
-                    placeholder="例：20240506"
-                    maxLength={10}
+                    onBlur={(e) => handleInputChange('date', formatDateValue(e.target.value))}
                     required
-                    className="border-point-purple/30 focus:border-point-blue"
                   />
-                  <div className="text-xs text-main-text/60 mt-1">例: 20240506 → 2024-05-06</div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="startTime">開始時間 *</Label>
-                    <Input
-                      id="startTime"
-                      type="text"
-                      value={formData.startTime}
-                      onChange={(e) => handleInputChange('startTime', e.target.value)}
-                      onBlur={(e) => handleTimeBlur('startTime', e)}
-                      placeholder="例：930"
-                      maxLength={5}
-                      required
-                      className="border-point-purple/30 focus:border-point-blue"
-                    />
-                    <div className="text-xs text-main-text/60 mt-1">例: 930 → 09:30</div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="endTime">終了時間</Label>
-                    <Input
-                      id="endTime"
-                      type="text"
-                      value={formData.endTime}
-                      onChange={(e) => handleInputChange('endTime', e.target.value)}
-                      onBlur={(e) => handleTimeBlur('endTime', e)}
-                      placeholder="例：1700"
-                      maxLength={5}
-                      className="border-point-purple/30 focus:border-point-blue"
-                    />
-                    <div className="text-xs text-main-text/60 mt-1">例: 1700 → 17:00 (任意)</div>
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="startTime">開始時間 *</Label>
+                  <Input
+                    id="startTime"
+                    value={formData.startTime}
+                    onChange={(e) => handleInputChange('startTime', e.target.value)}
+                    onBlur={(e) => handleInputChange('startTime', formatTimeValue(e.target.value))}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="endTime">終了時間</Label>
+                  <Input
+                    id="endTime"
+                    value={formData.endTime}
+                    onChange={(e) => handleInputChange('endTime', e.target.value)}
+                    onBlur={(e) => handleInputChange('endTime', formatTimeValue(e.target.value))}
+                  />
                 </div>
 
                 <div className="space-y-2">
@@ -195,84 +194,48 @@ export default function CreateEvent() {
                     id="location"
                     value={formData.location}
                     onChange={(e) => handleInputChange('location', e.target.value)}
-                    placeholder="例：保育園ホール"
                     required
-                    className="border-point-purple/30 focus:border-point-blue"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="maxParticipants">募集人数</Label>
+                  <Label htmlFor="capacity">募集人数</Label>
                   <Input
-                    id="maxParticipants"
+                    id="capacity"
                     type="number"
-                    value={formData.maxParticipants}
-                    onChange={(e) => handleInputChange('maxParticipants', e.target.value)}
-                    placeholder="例：10"
-                    className="border-point-purple/30 focus:border-point-blue"
+                    value={formData.capacity}
+                    onChange={(e) => handleInputChange('capacity', e.target.value)}
                   />
                 </div>
 
-                {/* ポイント設定フィールド */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="durationMinutes">所要時間（分） *</Label>
-                    <Input
-                      id="durationMinutes"
-                      type="number"
-                      value={formData.durationMinutes}
-                      onChange={(e) => handleInputChange('durationMinutes', e.target.value)}
-                      placeholder="例：60"
-                      required
-                      className="border-point-purple/30 focus:border-point-blue"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="totalPoints">合計ポイント *</Label>
-                    <Input
-                      id="totalPoints"
-                      type="number"
-                      value={formData.totalPoints}
-                      onChange={(e) => handleInputChange('totalPoints', e.target.value)}
-                      placeholder="例：100"
-                      required
-                      className="border-point-purple/30 focus:border-point-blue"
-                    />
-                  </div>
-                </div>
-                <div className="md:col-span-2 text-sm text-main-text/60 mt-1">
-                  <p>ポイント計算の目安 (保護者側の30分区切り選択を想定):</p>
-                  <ul className="list-disc list-inside ml-4">
-                    <li>30分程度の作業: 10pt</li>
-                    <li>1時間 (60分) 程度の作業: 20pt</li>
-                    <li>1時間30分 (90分) 程度の作業: 30pt</li>
-                    <li>2時間 (120分) 程度の作業: 40pt</li>
-                  </ul>
+                <div className="space-y-2">
+                  <Label htmlFor="pointReward">合計ポイント *</Label>
+                  <Input
+                    id="pointReward"
+                    type="number"
+                    value={formData.pointReward}
+                    onChange={(e) => handleInputChange('pointReward', e.target.value)}
+                    required
+                  />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">イベント詳細 *</Label>
+                <Label htmlFor="description">詳細 *</Label>
                 <Textarea
                   id="description"
                   value={formData.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
-                  placeholder="イベントの詳細な説明を入力してください..."
-                  rows={4}
                   required
-                  className="border-point-purple/30 focus:border-point-blue"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="requirements">持ち物</Label>
+                <Label htmlFor="requiredItems">持ち物</Label>
                 <Textarea
-                  id="requirements"
-                  value={formData.requirements}
-                  onChange={(e) => handleInputChange('requirements', e.target.value)}
-                  placeholder="例：動きやすい服装、軍手、飲み物"
-                  rows={3}
-                  className="border-point-purple/30 focus:border-point-blue"
+                  id="requiredItems"
+                  value={formData.requiredItems}
+                  onChange={(e) => handleInputChange('requiredItems', e.target.value)}
                 />
               </div>
 
@@ -282,23 +245,15 @@ export default function CreateEvent() {
                   id="specialNotes"
                   value={formData.specialNotes}
                   onChange={(e) => handleInputChange('specialNotes', e.target.value)}
-                  placeholder="例：小雨決行。中止の場合は当日午前中に連絡します。"
-                  rows={3}
-                  className="border-point-purple/30 focus:border-point-blue"
                 />
               </div>
 
               <div className="flex justify-end space-x-4 pt-6">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => router.back()}
-                  className="border-point-purple text-point-purple hover:bg-point-purple hover:text-white"
-                >
+                <Button type="button" variant="outline" onClick={() => router.back()}>
                   キャンセル
                 </Button>
                 <Button type="submit" className="bg-point-blue hover:bg-point-blue/90">
-                  イベントを作成
+                  更新する
                 </Button>
               </div>
             </form>
