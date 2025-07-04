@@ -93,14 +93,47 @@ export const updateEvent = async (req: Request, res: Response) => {
   }
 };
 
-// 申込
+// イベント参加申込
 export const applyEvent = async (req: Request, res: Response) => {
-  // TODO: ここに申込ロジックを書く
-  res.status(201).json({ message: "イベント参加申込（ダミー）" });
+  console.log("applyEventに到達した");
+  // 必要な情報を取得
+  const { eventId } = req.params;
+  const userId = req.body.userId; // 本当は認証から取るのが理想
+ // slotIdも必須なら取得
+ const slotId = req.body.slotId || ""; // 必要なら
+
+ try {
+   // 申込データをDBへ保存
+   const application = await prisma.eventApplication.create({
+     data: {
+       eventId,
+       userId,
+       slotId: slotId || undefined, // 空文字ならundefinedにする
+       status: "applied",
+       appliedAt: new Date(),
+       createdAt: new Date(),
+     },
+   });
+   res.status(201).json({ message: "申込OK", application });
+ } catch (error) {
+   console.error("申込失敗", error);
+   res.status(500).json({ error: "申込失敗" });
+ }
 };
 
-// キャンセル
+// イベント参加キャンセル
 export const cancelEvent = async (req: Request, res: Response) => {
-  // TODO: ここにキャンセルロジックを書く
-  res.status(200).json({ message: "イベント参加キャンセル（ダミー）" });
-};
+  const { eventId } = req.params;
+  const userId = req.body.userId;
+
+  try {
+    await prisma.eventApplication.updateMany({
+      where: { eventId, userId },
+      data: { status: "cancelled" }
+    });
+    res.status(200).json({ message: "キャンセルOK", eventId, userId });
+  } catch (error) {
+    console.error("キャンセル失敗", error);
+    res.status(500).json({ error: "キャンセル失敗" });
+  }
+}
