@@ -40,7 +40,7 @@ export default function CardRegisterPage() {
     <div style={{ background: '#fcf6ea', minHeight: '100vh', padding: 24 }}>
       {/* ページタイトルとパンくず */}
       <div style={{ fontSize: 14, color: '#a79e86', marginBottom: 10 }}>
-        &lt; 保育メンバーアドミン &gt; 決済管理
+        <h1 className="text-xl font-bold mb-4 text-black">決済管理</h1>
       </div>
       {/* アプリ利用料金 */}
       <section

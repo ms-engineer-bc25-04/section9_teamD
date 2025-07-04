@@ -109,7 +109,7 @@ export default function RewardsPage() {
 
   return (
     <div className="min-h-screen bg-[#faf6e6] p-8">
-      <h1 className="text-xl font-bold mb-4">優先権アイテム管理</h1>
+      <h1 className="text-xl font-bold mb-4">優先権管理</h1>
 
       {/* フォーム（新規・編集） */}
       <form
@@ -169,7 +169,7 @@ export default function RewardsPage() {
       </form>
 
       {/* 検索 */}
-      <div className="bg-white rounded-xl shadow p-6 max-w-4xl mx-auto mb-4">
+      <div className="bg-white rounded-xl shadow p-6 max-w-2xl mx-auto mb-4">
         <div className="flex items-center gap-2 mb-2">
           <span className="text-yellow-500 text-lg">★</span>
           <span className="font-semibold">優先権アイテム一覧</span>
