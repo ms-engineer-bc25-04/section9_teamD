@@ -118,7 +118,7 @@ export default function CreateEvent() {
         <div className="flex items-center mb-6">
           <Button
             variant="ghost"
-            onClick={() => router.push('/admin')}
+            onClick={() => router.push('/admin/menu')}
             className="mr-4 text-main-text hover:bg-point-purple/10"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
