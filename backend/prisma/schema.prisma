@@ -53,8 +53,8 @@ model Event {
   title              String                @db.VarChar(255)
   description        String                @db.Text
   date               DateTime
-  startTime          DateTime
-  endTime            DateTime
+  startTime          String
+  endTime            String
   location           String                @db.VarChar(255)
   requiredItems      String?               @db.Text
   specialNotes       String?               @db.Text
