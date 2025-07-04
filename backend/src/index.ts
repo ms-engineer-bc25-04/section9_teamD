@@ -7,7 +7,6 @@ import pointsRouter from "./routes/points";
 import privilegesRouter from "./routes/privileges";
 import type { ErrorRequestHandler } from "express";
 
-
 const app = express();
 app.use(cors());
 app.use(express.json());

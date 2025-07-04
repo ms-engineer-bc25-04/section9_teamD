@@ -89,14 +89,14 @@ model EventApplication {
   id         String   @id @default(uuid()) @db.Char(36)
   eventId    String   @db.Char(36)
   userId     String   @db.Char(36)
-  slotId     String?   @db.Char(36)
+  slotId     String?   @db.Char(36)  // ?追加
   status     String   @db.VarChar(20)
   appliedAt  DateTime @default(now())
   createdAt  DateTime @default(now())
 
   event      Event    @relation(fields: [eventId], references: [id])
   user       User     @relation(fields: [userId], references: [id])
-  slot       EventSlot? @relation(fields: [slotId], references: [id])
+  slot       EventSlot? @relation(fields: [slotId], references: [id]) // slotはオプションで、nullの場合もあるため、?を追加
 }
 
 model EventReaction {

@@ -263,7 +263,7 @@ export const applyEvent = async (req: Request, res: Response) => {
  }
 };
 
-// イベント参加キャンセル
+// イベント参加キャンセル　【未検証】
 export const cancelEvent = async (req: Request, res: Response) => {
   const { eventId } = req.params;
   const userId = req.body.userId;
