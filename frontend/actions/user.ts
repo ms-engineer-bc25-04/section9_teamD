@@ -11,8 +11,8 @@ interface UserProfile {
 // デモ用のユーザープロフィールデータ
 const userProfileData: UserProfile = {
   id: "user1",
-  parentName: "山田 太郎",
-  childName: "山田 花子",
+  parentName: "中村　あやか",
+  childName: "中村 はな",
   childClass: "ひまわり組",
   avatarUrl: "/placeholder.svg?height=80&width=80", // プレースホルダー画像
 }
