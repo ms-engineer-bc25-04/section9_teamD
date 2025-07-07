@@ -6,12 +6,16 @@ import { app } from "firebase-admin";
 export const getEvents = async (req: Request, res: Response) => {
   const { year, month } = req.query;
 
+  const now = new Date()
+  const targetYear = year ?? now.getFullYear()
+  const targetMonth = month ?? now.getMonth() + 1
+
   try {
     const events = await prisma.event.findMany({
       where: {
         date: {
-          gte: new Date(`${year}-${month}-01`),
-          lt: new Date(`${year}-${Number(month) + 1}-01`),
+          gte: new Date(`${targetYear}-${targetMonth}-01`),
+          lt: new Date(`${targetYear}-${Number(targetMonth) + 1}-01`),
         },
       },
       include: {
