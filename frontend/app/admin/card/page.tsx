@@ -1,6 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { Button } from '../../../components/ui/button'
+import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 // シンプルな警告アイコンSVG（react-icons不要）
 function WarningIcon() {
@@ -14,6 +17,7 @@ function WarningIcon() {
 }
 
 export default function CardRegisterPage() {
+  const router = useRouter();
   const [showForm, setShowForm] = useState(false);
   const [registered, setRegistered] = useState(false);
 
@@ -38,14 +42,23 @@ export default function CardRegisterPage() {
 
   return (
     <div style={{ background: '#fcf6ea', minHeight: '100vh', padding: 24 }}>
-      {/* ページタイトルとパンくず */}
-      <div style={{ fontSize: 14, color: '#a79e86', marginBottom: 10 }}>
-        <h1 className="text-xl font-bold mb-4 text-black">決済管理</h1>
+       {/* ヘッダー部分をflexで横並びに */}
+      <div className="flex items-center mb-4">
+        <Button
+        variant="ghost"
+        onClick={() => router.push('/admin/menu')}
+        className="mr-4 text-main-text hover:bg-[#eac6d9]/30"
+        >
+         <ArrowLeft className="h-4 w-4 mr-2" />
+         管理ダッシュボードへ
+        </Button>
+        <h1 className="text-2xl font-bold">決済管理</h1>
       </div>
+      
       {/* アプリ利用料金 */}
       <section
         style={{
-          background: '#f5f5f5',
+          background: '#fffbe9',
           borderRadius: 18,
           padding: '24px 0 12px',
           marginBottom: 32,
@@ -56,10 +69,10 @@ export default function CardRegisterPage() {
           boxShadow: '0 2px 6px 0 #f2e8d8b8',
         }}
       >
-        <div style={{ fontSize: 18, fontWeight: 600, marginLeft: 32, marginBottom: 10, color: '#6d6653' }}>アプリ利用料金</div>
+        <div style={{ fontSize: 24, fontWeight: 600, marginLeft: 32, marginBottom: 10, color: '#6d6653' }}>アプリ利用料金</div>
         <div
           style={{
-            background: '#f1f0ee',
+            background: '#fffbe9',
             borderRadius: 12,
             padding: '24px 0',
             margin: '0 24px',
@@ -77,7 +90,7 @@ export default function CardRegisterPage() {
       {/* クレジットカード登録（未登録時） */}
       <section
         style={{
-          background: '#fff',
+          background: '#fffbe9',
           borderRadius: 18,
           boxShadow: '0 2px 8px 0 #efe2c73c',
           maxWidth: 700,
@@ -87,8 +100,16 @@ export default function CardRegisterPage() {
           border: '1.5px solid #f3ead2',
         }}
       >
-        <div style={{ fontWeight: 700, fontSize: 16, color: '#6d6653', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 20, color: '#d4ac6e' }}>＝</span>
+        <div style={{ fontWeight: 700, fontSize: 24, color: '#6d6653', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 20, color: '#d4ac6e' }}>
+            <img
+            src="/chocot-logo.png"
+            alt="chocotロゴ"
+            width={40}
+            height={40}
+            className="rounded-full"
+            />          
+          </span>
           クレジットカード登録
         </div>
 
@@ -207,16 +228,20 @@ export default function CardRegisterPage() {
               </button>
               <button
                 type="submit"
-                style={{
-                  padding: '8px 22px',
-                  border: 'none',
-                  borderRadius: 8,
-                  background: '#4167c2',
-                  color: '#fff',
-                  fontWeight: 700,
-                  fontSize: 15,
-                  cursor: 'pointer',
-                }}
+                className="
+                bg-blue-600
+                hover:bg-blue-700
+                text-white
+                font-bold
+                py-2 px-4
+                rounded
+                shadow
+                transition
+                duration-200
+                scale-100
+                hover:scale-105
+                text-[15px]
+                "
               >
                 カードを登録
               </button>
@@ -236,17 +261,20 @@ export default function CardRegisterPage() {
                 </div>
                 <button
                   onClick={() => setShowForm(true)}
-                  style={{
-                    padding: '10px 26px',
-                    border: 'none',
-                    borderRadius: 8,
-                    background: '#4167c2',
-                    color: '#fff',
-                    fontWeight: 700,
-                    fontSize: 15,
-                    boxShadow: '0 2px 6px #e2e7f8c2',
-                    cursor: 'pointer',
-                  }}
+                className="
+                bg-blue-600
+                hover:bg-blue-700
+                text-white
+                font-bold
+                py-3 px-7
+                rounded
+                shadow
+                transition
+                duration-200
+                scale-100
+                hover:scale-105
+                text-[15px]
+                "           
                 >
                   クレジットカードの登録
                 </button>

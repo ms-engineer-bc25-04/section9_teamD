@@ -65,10 +65,11 @@ export function MobileNav({ children }: MobileNavProps) {
             <div className="p-4 text-center text-muted-foreground text-sm">プロフィール読み込み中...</div>
           ) : userProfile ? (
             <div className="p-4 flex flex-col items-center text-center">
-              <Avatar className="h-14 w-14 mb-2 border-2 border-primary">
+              <Avatar className="h-14 w-14 mb-2">
                 {" "}
                 {/* アイコンサイズを縮小 */}
-                <AvatarImage src={userProfile.avatarUrl || "/placeholder.svg"} alt={userProfile.parentName} />
+                {/* <AvatarImage src={userProfile.avatarUrl || "/placeholder.svg"} alt={userProfile.parentName} /> */}
+                <AvatarImage src="/chocot-logo.png" alt={userProfile.parentName} />
                 <AvatarFallback>{userProfile.parentName.charAt(0)}</AvatarFallback>
               </Avatar>
               <p className="font-semibold text-base">{userProfile.parentName}</p> {/* フォントサイズを縮小 */}
