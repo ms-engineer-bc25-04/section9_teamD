@@ -14,7 +14,7 @@ const userProfileData: UserProfile = {
   parentName: "中村　あやか",
   childName: "中村 はな",
   childClass: "ひまわり組",
-  avatarUrl: "/placeholder.svg?height=80&width=80", // プレースホルダー画像
+  avatarUrl: "https://chokotto-stamps.s3.ap-northeast-1.amazonaws.com/72412.jpg", // プレースホルダー画像
 }
 
 /**
