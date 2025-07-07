@@ -12,6 +12,11 @@ export interface PriorityRight {
   expirationDate?: string
 }
 
+// ステータスの型チェック関数(★一時的に追加)
+function isValidStatus(status: string): status is "未使用" | "使用済み" | "期限切れ" {
+  return ["未使用", "使用済み", "期限切れ"].includes(status)
+}
+
 // ユーザーの優先権リストをAPIから取得し、フロント側で「期限切れ判定」と「取得日順ソート」を行う
 export async function getUserPriorityRights(userId: string): Promise<PriorityRight[]> {
   const res = await fetch(`http://localhost:4000/api/privileges/${userId}`, { cache: "no-store" })
@@ -23,7 +28,11 @@ export async function getUserPriorityRights(userId: string): Promise<PriorityRig
   today.setHours(0, 0, 0, 0) // 時間切り捨てで日付比較
 
   return rights
-    .map((right) => {
+    .map((right): PriorityRight => {
+       // バックエンドからのデータの型チェック(★一時的に追加)
+      if (!isValidStatus(right.status)) {
+        throw new Error(`Invalid status: ${right.status}`)
+      }
       if (right.status === "未使用" && right.expirationDate) {
         const expirationDateObj = new Date(right.expirationDate)
         expirationDateObj.setHours(0, 0, 0, 0)
@@ -31,7 +40,10 @@ export async function getUserPriorityRights(userId: string): Promise<PriorityRig
           return { ...right, status: "期限切れ" }
         }
       }
-      return right
+      return {
+        ...right,
+        status: right.status // 型チェック済みなので安全(★一時的に追加)
+      }
     })
     .sort((a, b) => new Date(b.dateAcquired).getTime() - new Date(a.dateAcquired).getTime())
 }
