@@ -1,89 +1,121 @@
-
 import { PrismaClient } from '@prisma/client'
-import 'dotenv/config'   // .env の DATABASE_URL を読む
-
+import 'dotenv/config'
 const prisma = new PrismaClient()
 
 async function main() {
-  // 1. 保育園を作成
+  // -----------------------------
+  // 1. Stampテーブル初期化 → 3件作成
+  // -----------------------------
+  await prisma.stamp.deleteMany()
+
+  await prisma.stamp.createMany({
+    data: [
+      {
+        name: 'ありがとうございます',
+        imageUrl: 'https://chokotto-stamps.s3.ap-northeast-1.amazonaws.com/arigatou.png',
+      },
+      {
+        name: 'おつかれさまでした',
+        imageUrl: 'https://chokotto-stamps.s3.ap-northeast-1.amazonaws.com/otukaresama.png',
+      },
+      {
+        name: 'がんばった',
+        imageUrl: 'https://chokotto-stamps.s3.ap-northeast-1.amazonaws.com/ganbatta.png',
+      },
+    ],
+  })
+
+  // -----------------------------
+  // 2. 保育園を1件作成
+  // -----------------------------
   const nursery = await prisma.nursery.create({
-    data: { name: 'テスト保育園' },
-  })
-
-  // 2. 保護者ユーザーを作成
-  const parentUser = await prisma.user.upsert({
-    where: { email: 'ayaka@example.com' },
-    update: {}, // 更新不要なら空
-    create: {
-      email:        'ayaka@example.com',
-      passwordHash: 'hashedpassword',
-      name:         '中村あやか',
-      role:         'parent',
-      isAdmin:      false,
-      nursery:      { connect: { id: nursery.id } },
+    data: {
+      name: 'テスト保育園',
     },
   })
 
-  // 3. 職員ユーザーを作成
-  const staffUser = await prisma.user.upsert({
-    where: { email: 'staff@example.com' },
-    update: {}, // 更新不要なら空
-    create: {
-      email:        'staff@example.com',
+  // -----------------------------
+  // 3. ユーザー（保護者）1件作成
+  // -----------------------------
+  const parentUser = await prisma.user.create({
+    data: {
+      email: 'ayaka@example.com',
       passwordHash: 'hashedpassword',
-      name:         '高橋さやか',
-      role:         'staff',
-      isAdmin:      true,
-      nursery:      { connect: { id: nursery.id } },
+      name: '中村あやか',
+      role: 'parent',
+      isAdmin: false,
+      nursery: {
+        connect: { id: nursery.id },
+      },
     },
   })
 
-  // 4. イベントを作成し、そのIDを変数に保管
+  // -----------------------------
+  // 4. ユーザー（職員）1件作成
+  // -----------------------------
+  const staffUser = await prisma.user.create({
+    data: {
+      email: 'staff@example.com',
+      passwordHash: 'hashedpassword',
+      name: '高橋さやか',
+      role: 'staff',
+      isAdmin: true,
+      nursery: {
+        connect: { id: nursery.id },
+      },
+    },
+  })
+
+  // -----------------------------
+  // 5. イベント1件作成
+  // -----------------------------
   const createdEvent = await prisma.event.create({
     data: {
-      title:           '運動会準備',
-      date:            new Date('2025-07-07'),
-      capacity:        5,
-      description:     '運動会の準備をします',
-      deadline:        new Date('2025-07-07'),
-      pointReward:     20,
-      startTime:       new Date().toISOString(),
-      endTime:         new Date().toISOString(),
-      location:        '園庭',
-      privilegeAllowed:true,
-      createdById:     staffUser.id,
+      title: '運動会準備',
+      date: new Date(),
+      capacity: 5,
+      description: '運動会の準備をします',
+      deadline: new Date(),
+      pointReward: 20,
+      createdById: staffUser.id,
+      startTime: new Date().toISOString(), // 修正
+      endTime: new Date().toISOString(),   // 修正
+      location: '場所',
+      privilegeAllowed: true,
     },
   })
-
-  // 5. 保護者のポイント履歴を作成（event_id もつなげる）
+  
+   // -----------------------------
+  // 6. 保護者のポイント履歴を作成
+  // -----------------------------
   await prisma.point.create({
     data: {
-      userId:    parentUser.id,
-      eventId:   createdEvent.id,
-      points:    100,
+      userId: parentUser.id,
+      eventId: createdEvent.id,
+      points: 100,
       grantedAt: new Date(),
-      // createdAt は schema.prisma 側で @default(now()) がついていれば不要
     },
   })
-
-  // 6. 景品（rewards）を複数作成
+  
+  // -----------------------------
+  // 7. 景品（rewards）を複数作成
+  // -----------------------------
   const rewards = [
     {
-      name:           '運動会前列スペース 秋',
+      name: '運動会前列スペース 秋',
       pointsRequired: 100,
-      description:    '1家庭1回まで、定員6家庭',
-      capacity:       6,    // ← 必須！
+      description: '1家庭1回まで、定員6家庭',
+      capacity: 6,
     },
     {
-      name:           '面談時間 優先予約枠',
+      name: '面談時間 優先予約枠',
       pointsRequired: 30,
-      description:    '各時間帯ごとに枠制限あり',
-      capacity:       10,
+      description: '各時間帯ごとに枠制限あり',
+      capacity: 10,
     },
-    // ... 他のアイテムも同様に
   ]
 
-  for (const r of rewards) {
+    for (const r of rewards) {
     await prisma.reward.create({ data: r })
   }
 }
@@ -96,4 +128,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect()
   })
-
