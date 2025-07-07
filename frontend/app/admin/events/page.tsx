@@ -377,7 +377,14 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
-  ArrowLeft, Plus, Calendar, MapPin, Users, Trash2, ChevronLeft, ChevronRight,
+  ArrowLeft,
+  Plus,
+  Calendar,
+  MapPin,
+  Users,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react'
 
 type Event = {
@@ -452,13 +459,13 @@ export default function EventsList() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case '募集中':
-        return { background: "#f8bedf", color: "#fff" }
+        return { background: '#f8bedf', color: '#fff' }
       case '満員':
-        return { background: "#b39ddb", color: "#fff" }
+        return { background: '#b39ddb', color: '#fff' }
       case '終了':
-        return { background: "#a1a1aa", color: "#fff" }
+        return { background: '#a1a1aa', color: '#fff' }
       default:
-        return { background: "#7eb8f6", color: "#fff" }
+        return { background: '#7eb8f6', color: '#fff' }
     }
   }
 
@@ -561,7 +568,17 @@ export default function EventsList() {
           </div>
           <Button
             onClick={() => router.push('/admin/events/new')}
-            className="bg-point-pink hover:bg-point-pink/90"
+            className="
+                bg-[#e086b7]
+                hover:bg-[#eac6d9]
+                text-white
+                font-bold
+                shadow
+                transition
+                duration-200
+                scale-100
+                hover:scale-105
+              "
           >
             <Plus className="h-4 w-4 mr-2" />
             新しいイベント
@@ -604,9 +621,9 @@ export default function EventsList() {
                           key={index}
                           className={`p-2 text-center rounded relative ${day ? 'cursor-pointer' : ''} ${
                             isSelected
-                              ? 'bg-point-purple text-white'
+                              ? 'bg-[#e086b7] text-white'
                               : hasEvent
-                                ? 'bg-point-blue/20'
+                                ? 'border-2 border-[#eac6d9] bg-[#fffbe9]'
                                 : ''
                           }`}
                           onClick={() => day && handleDateClick(day)}
@@ -669,14 +686,24 @@ export default function EventsList() {
                             </div>
                             <div className="flex items-center">
                               <Users className="h-4 w-4 mr-1 text-point-purple" />
-                              {event.participantsCount}/{event.maxParticipants}人
+                              {event.participantsCount}/{event.capacity}人
                             </div>
                           </div>
                         </div>
                         <div className="flex flex-col items-end ml-4">
                           <Button
                             size="sm"
-                            className="bg-point-blue hover:bg-point-blue/90 mb-2"
+                            className="
+                                  bg-blue-600
+                                  hover:bg-blue-700
+                                  text-white
+                                  mb-2
+                                  shadow
+                                  transition
+                                  duration-200
+                                  scale-100
+                                  hover:scale-105
+                                "
                             onClick={() =>
                               navigateWithCalendarState(`/admin/events/${event.id}/participants`)
                             }
@@ -685,7 +712,17 @@ export default function EventsList() {
                           </Button>
                           <Button
                             size="sm"
-                            className="bg-point-purple hover:bg-point-purple/90 mb-2"
+                            className="
+                                bg-[#e086b7]
+                                hover:bg-[#eac6d9]
+                                text-white
+                                mb-2
+                                shadow
+                                transition
+                                duration-200
+                                scale-100
+                                hover:scale-105
+                              "
                             onClick={() =>
                               navigateWithCalendarState(`/admin/events/${event.id}/detail`)
                             }
@@ -695,7 +732,16 @@ export default function EventsList() {
                           <Button
                             size="sm"
                             variant="outline"
-                            className="border-point-pink text-point-pink hover:bg-point-pink hover:text-white"
+                            className="
+                                border-[#eac6d9]
+                                text-[#e086b7]
+                                hover:bg-[#eac6d9]
+                                hover:text-white
+                                transition
+                                duration-200
+                                scale-100
+                                hover:scale-105
+                              "
                             onClick={() => handleDeleteEvent(event.id, event.title)}
                           >
                             <Trash2 className="h-4 w-4 mr-1" />
