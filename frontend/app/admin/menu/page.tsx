@@ -28,8 +28,9 @@ export default function AdminDashboard() {
       description: 'PTA活動やボランティアイベントの作成・編集',
       icon: Calendar,
       color: 'bg-blue-200',
-      href: '/admin/events/[id]/edit',
-      count: 8,
+      href: '/admin/events',
+      //href: '/admin/events/[id]/edit',
+      //count: 8,
       countLabel: 'アクティブ',
     },
     {
@@ -38,7 +39,7 @@ export default function AdminDashboard() {
       icon: Award,
       color: 'bg-yellow-200',
       href: '/admin/points',
-      count: 15,
+      //count: 15,
       countLabel: '今月付与',
     },
     {
@@ -62,15 +63,27 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-[#fcf6ea] px-4 py-8">
       <div className="max-w-7xl mx-auto">
         {/* ヘッダー */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        {/* <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4"> */}
+        <div className="flex items-center gap-6 mb-8 justify-between">
+          {/* 左側：ロゴ＋タイトル */}
+          <div className="flex items-center gap-6">
+            <img
+            src="/chocot-logo.png"
+            alt="Chocotロゴ"
+            width={80}
+            height={80}
+            className="rounded-full"
+            />
+           <div>
+             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               管理ダッシュボード
-            </h1>
-            <p className="text-gray-600">
-              PTA活動管理システム - さくら保育園
-            </p>
+             </h1>
+             <p className="text-gray-600">
+              PTA活動管理システム「ちょこっと」 - さくら保育園
+             </p>
+           </div>
           </div>
+          {/* 右側：通知・ログアウト */}
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
@@ -135,7 +148,7 @@ export default function AdminDashboard() {
           {/* サイドバー - 今日の予定 */}
           <div>
             <h2 className="text-xl font-bold text-gray-900 mb-4">今日の予定</h2>
-            <ProfileCard>
+            <ProfileCard className="border border-gray-300">
               <ProfileCardContent className="p-4">
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3 p-3 bg-blue-100 rounded-lg">

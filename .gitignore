@@ -42,3 +42,6 @@ Thumbs.db
 # ───── その他ログや一時ファイル─────
 *.log
 *.tmp
+
+frontend/package-lock.json
+backend/package-lock.json

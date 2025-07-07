@@ -24,6 +24,13 @@
   --font-rounded: "M PLUS Rounded 1c", sans-serif;
 }
 
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #222;
+    color: #fff;
+  }
+}
+
 body {
   background: var(--color-background);
   color: var(--color-foreground);
