@@ -174,6 +174,7 @@ export const events = [
 
 export type Event = Omit<(typeof events)[0], "participants"> & {
   participants?: number
+  applicationsCount?: number // ← これ追加！
   itemsToBring: string // 新しいプロパティ
   specialNotes: string // 新しいプロパティ
 }
