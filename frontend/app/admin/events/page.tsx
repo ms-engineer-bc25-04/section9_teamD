@@ -404,9 +404,9 @@ export default function EventsList() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const initialYear = searchParams.get('year')
-  const initialMonth = searchParams.get('month')
-  const initialDay = searchParams.get('day')
+  const initialYear = searchParams?.get('year')
+  const initialMonth = searchParams?.get('month')
+  const initialDay = searchParams?.get('day')
 
   const [displayMonth, setDisplayMonth] = useState(() => {
     if (initialYear && initialMonth) {
@@ -661,7 +661,7 @@ export default function EventsList() {
                           <div className="text-sm text-main-text/70 space-y-1">
                             <div className="flex items-center">
                               <Calendar className="h-4 w-4 mr-1" />
-                              {event.date} {event.time}
+                              {event.date} {event.startTime} - {event.endTime}
                             </div>
                             <div className="flex items-center">
                               <MapPin className="h-4 w-4 mr-1" />

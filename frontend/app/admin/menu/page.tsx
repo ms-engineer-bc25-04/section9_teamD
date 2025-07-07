@@ -12,6 +12,17 @@ import {
 import { Badge } from '../../../components/ui/badge'
 import { Calendar, Plus, Award, CreditCard, LogOut, Bell, Users, Star } from 'lucide-react'
 
+// 型定義を追加
+interface MenuItem {
+  title: string
+  description: string
+  icon: React.ComponentType<any>
+  color: string
+  href: string
+  count?: number
+  countLabel?: string
+}
+
 export default function AdminDashboard() {
   const router = useRouter()
 
@@ -125,11 +136,11 @@ export default function AdminDashboard() {
                           {item.title}
                         </ProfileCardTitle>
                       </div>
-                      {item.count && (
+                      {'count' in item && typeof item.count === 'number' && item.count > 0 && (
                         <Badge className="bg-purple-400 text-white text-sm px-3 py-1 rounded-full">
                           {item.count}
-                        </Badge>
-                      )}
+                          </Badge>
+                        )}
                     </div>
                   </ProfileCardHeader>
                   <ProfileCardContent className="px-4 pt-0 pb-4">

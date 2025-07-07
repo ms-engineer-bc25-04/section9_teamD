@@ -11,7 +11,21 @@ declare module "next-themes" {
       children?: React.ReactNode;            
     }
   
+    // useTheme フックの戻り値の型を定義
+    interface UseThemeReturn {
+      theme: string | undefined;
+      setTheme: (theme: string) => void;
+      resolvedTheme: string | undefined;
+      themes: string[];
+      forcedTheme: string | undefined;
+      systemTheme: 'dark' | 'light' | undefined;
+    }
+
     // ThemeProvider をその型でエクスポート
     export const ThemeProvider: ComponentType<ThemeProviderProps>;
+
+    // useTheme フックをエクスポート
+    export function useTheme(): UseThemeReturn;
+
   }
   

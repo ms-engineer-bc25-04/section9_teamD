@@ -2,7 +2,7 @@ import type React from 'react'
 import type { Metadata } from 'next'
 import { M_PLUS_Rounded_1c } from 'next/font/google'
 import './globals.css'
-import { ThemeProvider } from 'next-themes'
+import { ThemeProvider } from '@/components/theme-provider'
 
 const mPlusRounded1c = M_PLUS_Rounded_1c({
   weight: ['400', '700'], // Regular and Bold weights
@@ -11,15 +11,33 @@ const mPlusRounded1c = M_PLUS_Rounded_1c({
 })
 
 export const metadata: Metadata = {
-  title: 'PTA活動支援アプリ',
+  title: 'PTA活動支援アプリ「ちょこっと」',
   description: '保護者のPTA活動参加を促進するアプリ',
   generator: 'v0.dev',
+  manifest: '/manifest.json',
+  themeColor: '#f8b9d4',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'ちょこっと',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'black-translucent',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja" suppressHydrationWarning>
-      <body className="bg-background text-foreground">
+       <head>
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/chocot-logo.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body className={`${mPlusRounded1c.variable} bg-background text-foreground`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
