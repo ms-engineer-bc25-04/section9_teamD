@@ -1,6 +1,5 @@
-// prisma/seed.ts
-
 import { PrismaClient } from '@prisma/client'
+import 'dotenv/config'
 const prisma = new PrismaClient()
 
 async function main() {
@@ -38,7 +37,7 @@ async function main() {
   // -----------------------------
   // 3. ユーザー（保護者）1件作成
   // -----------------------------
-  await prisma.user.create({
+  const parentUser = await prisma.user.create({
     data: {
       email: 'ayaka@example.com',
       passwordHash: 'hashedpassword',
@@ -70,7 +69,7 @@ async function main() {
   // -----------------------------
   // 5. イベント1件作成
   // -----------------------------
-  await prisma.event.create({
+  const createdEvent = await prisma.event.create({
     data: {
       title: '運動会準備',
       date: new Date(),
@@ -85,6 +84,40 @@ async function main() {
       privilegeAllowed: true,
     },
   })
+  
+   // -----------------------------
+  // 6. 保護者のポイント履歴を作成
+  // -----------------------------
+  await prisma.point.create({
+    data: {
+      userId: parentUser.id,
+      eventId: createdEvent.id,
+      points: 100,
+      grantedAt: new Date(),
+    },
+  })
+  
+  // -----------------------------
+  // 7. 景品（rewards）を複数作成
+  // -----------------------------
+  const rewards = [
+    {
+      name: '運動会前列スペース 秋',
+      pointsRequired: 100,
+      description: '1家庭1回まで、定員6家庭',
+      capacity: 6,
+    },
+    {
+      name: '面談時間 優先予約枠',
+      pointsRequired: 30,
+      description: '各時間帯ごとに枠制限あり',
+      capacity: 10,
+    },
+  ]
+
+    for (const r of rewards) {
+    await prisma.reward.create({ data: r })
+  }
 }
 
 main()
