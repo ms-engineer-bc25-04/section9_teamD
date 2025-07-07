@@ -194,7 +194,7 @@ export default function CardRegisterPage() {
                 <label style={{ fontWeight: 600, color: '#7a6a50', fontSize: 15 }}>カード名義人</label>
                 <input
                   type="text"
-                  placeholder="山田 太郎"
+                  placeholder="中村　あやか"
                   value={cardName}
                   onChange={e => setCardName(e.target.value)}
                   required
