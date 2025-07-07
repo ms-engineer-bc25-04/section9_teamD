@@ -1,16 +1,43 @@
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+// prisma/seed.ts
+
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
 
 async function main() {
-  // 1. Nurseryを先に作成
+  // -----------------------------
+  // 1. Stampテーブル初期化 → 3件作成
+  // -----------------------------
+  await prisma.stamp.deleteMany()
+
+  await prisma.stamp.createMany({
+    data: [
+      {
+        name: 'ありがとうございます',
+        imageUrl: 'https://chokotto-stamps.s3.ap-northeast-1.amazonaws.com/arigatou.png',
+      },
+      {
+        name: 'おつかれさまでした',
+        imageUrl: 'https://chokotto-stamps.s3.ap-northeast-1.amazonaws.com/otukaresama.png',
+      },
+      {
+        name: 'がんばった',
+        imageUrl: 'https://chokotto-stamps.s3.ap-northeast-1.amazonaws.com/ganbatta.png',
+      },
+    ],
+  })
+
+  // -----------------------------
+  // 2. 保育園を1件作成
+  // -----------------------------
   const nursery = await prisma.nursery.create({
     data: {
-      name: 'テスト保育園'
-    }
-  });
+      name: 'テスト保育園',
+    },
+  })
 
-  // 2. nursery.idを使ってユーザーを作成
-  // ユーザー1件
+  // -----------------------------
+  // 3. ユーザー（保護者）1件作成
+  // -----------------------------
   await prisma.user.create({
     data: {
       email: 'ayaka@example.com',
@@ -19,11 +46,14 @@ async function main() {
       role: 'parent',
       isAdmin: false,
       nursery: {
-      connect: { id: nursery.id } // nurseryを必ず指定
-    }
+        connect: { id: nursery.id },
+      },
     },
-  });
-  // 職員1件
+  })
+
+  // -----------------------------
+  // 4. ユーザー（職員）1件作成
+  // -----------------------------
   const staffUser = await prisma.user.create({
     data: {
       email: 'staff@example.com',
@@ -32,11 +62,14 @@ async function main() {
       role: 'staff',
       isAdmin: true,
       nursery: {
-      connect: { id: nursery.id } // nurseryを必ず指定
-    }
+        connect: { id: nursery.id },
+      },
     },
-  });
-  // イベント1件
+  })
+
+  // -----------------------------
+  // 5. イベント1件作成
+  // -----------------------------
   await prisma.event.create({
     data: {
       title: '運動会準備',
@@ -46,19 +79,19 @@ async function main() {
       deadline: new Date(),
       pointReward: 20,
       createdById: staffUser.id,
-      startTime: new Date(), // 必須
-      endTime: new Date(),   // 必須
-      location: '場所',      // 必須
-      privilegeAllowed: true // 必須
+      startTime: new Date().toISOString(), // 修正
+      endTime: new Date().toISOString(),   // 修正
+      location: '場所',
+      privilegeAllowed: true,
     },
-  });
+  })
 }
 
 main()
   .catch((e) => {
-    console.error(e);
-    process.exit(1);
+    console.error(e)
+    process.exit(1)
   })
   .finally(async () => {
-    await prisma.$disconnect();
-  });
+    await prisma.$disconnect()
+  })

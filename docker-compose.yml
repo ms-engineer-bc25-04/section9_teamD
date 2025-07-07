@@ -12,7 +12,7 @@ services:
     depends_on:
       - db
       - redis
-    command: npm run dev
+    # command: npm run dev
 
   db:
     image: mysql:8
