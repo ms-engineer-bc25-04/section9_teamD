@@ -79,7 +79,7 @@ export default function CreateEvent() {
         capacity: formData.capacity ? Number(formData.capacity) : null, // 数値に変換
         requiredItems: formData.requiredItems, // 任意項目
         specialNotes: formData.specialNotes,
-        createdById: 'mock-user-id',
+        createdById: 'afec11ac-018e-43bc-b1c6-7bc62edf38f3', // 仮のユーザーID
         deadline: formData.date, // 必要なら
         pointReward: Number(formData.pointReward), // 合計ポイントを数値に変換
         privilegeAllowed: true,
@@ -294,8 +294,8 @@ export default function CreateEvent() {
                   キャンセル
                 </Button>
                 <Button
-                type="submit"
-                className="
+                  type="submit"
+                  className="
                 bg-blue-600
                 hover:bg-blue-700
                 text-white
@@ -307,8 +307,8 @@ export default function CreateEvent() {
                 hover:scale-105
                 "
                 >
-                イベントを作成
-               </Button>
+                  イベントを作成
+                </Button>
               </div>
             </form>
           </ProfileCardContent>
