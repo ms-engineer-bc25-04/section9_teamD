@@ -5,10 +5,8 @@ import { Header } from "@/components/layout/header"
 import { MobileNav } from "@/components/layout/mobile-nav"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-//import { Button } from "@/components/ui/button"
 import { User, School } from "lucide-react"
 import { getUserProfile } from "@/actions/user"
-//import { signOut } from "next-auth/react" // ← 削除またはコメントアウト
 
 interface UserProfile {
   id: string
@@ -28,6 +26,12 @@ export default function ProfilePage() {
     const loadProfile = async () => {
       setIsLoading(true)
       const profile = await getUserProfile(userId)
+
+      // ✅ S3画像URLを強制上書き（デモ用）
+      if (profile) {
+        profile.avatarUrl = "https://chokotto-stamps.s3.ap-northeast-1.amazonaws.com/72412.jpg"
+      }
+
       setUserProfile(profile)
       setIsLoading(false)
     }
@@ -81,13 +85,6 @@ export default function ProfilePage() {
                 <p className="font-medium text-lg">{userProfile.childClass}</p>
               </div>
             </div>
-
-            {/* ログアウトボタンはnext-auth/react未使用のため非表示またはダミー */}
-            {/* <div className="pt-4 border-t border-border">
-              <Button variant="destructive" className="w-full" onClick={() => signOut()}>
-                ログアウト
-              </Button>
-            </div> */}
           </CardContent>
         </Card>
       </main>

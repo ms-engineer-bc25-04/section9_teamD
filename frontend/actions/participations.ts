@@ -116,8 +116,8 @@ const allEventParticipations: EventParticipation[] = [
 ]
 
 const allEventParticipantsList: { [eventId: string]: EventParticipant[] } = {
-  "1": [{ id: "user1", name: "あなた", avatar: "/placeholder.svg?height=40&width=40" }],
-  "2": [{ id: "user1", name: "あなた", avatar: "/placeholder.svg?height=40&width=40" }],
+  "1": [{ id: "user1", name: "あなた", avatar: "https://chokotto-stamps.s3.ap-northeast-1.amazonaws.com/72412.jpg" }],
+  "2": [{ id: "user1", name: "あなた", avatar: "https://chokotto-stamps.s3.ap-northeast-1.amazonaws.com/72412.jpg" }],
 }
 
 // ヘルパー関数：日付フォーマット
@@ -229,7 +229,7 @@ export async function applyForEvent(
     allEventParticipantsList[eventId].push({
       id: userId,
       name: "あなた",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://chokotto-stamps.s3.ap-northeast-1.amazonaws.com/72412.jpg",
     })
   }
 
