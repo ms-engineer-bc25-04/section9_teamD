@@ -75,6 +75,12 @@ export default function EventDetailPage({ params }: { params: Promise<ParamsType
               <span>特記事項: {eventData.specialNotes}</span>
             </div>
             <p className="mt-4">{eventData.description}</p>
+            <Button
+              className="mt-6 w-full bg-blue-600 text-white hover:bg-blue-700"
+              onClick={() => router.push(`/admin/events/${eventData.id}/edit`)}
+            >
+              編集する
+            </Button>
             <Button variant="outline" onClick={() => router.back()} className="mt-6 w-full">
               戻る
             </Button>
