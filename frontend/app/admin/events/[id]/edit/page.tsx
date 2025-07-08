@@ -5,12 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import {
-  ProfileCard,
-  ProfileCardContent,
-  ProfileCardHeader,
-  ProfileCardTitle,
-} from '@/components/ui/profile-card'
+
 import { Label } from '@/components/ui/label'
 import { ArrowLeft, Calendar } from 'lucide-react'
 
@@ -136,135 +131,135 @@ export default function EditEvent() {
           <h1 className="text-2xl font-bold text-main-text">イベントを編集</h1>
         </div>
 
-         <div className="rounded-2xl shadow-md border border-[#ece2ce] bg-[#fffbe9] p-8">
+        <div className="rounded-2xl shadow-md border border-[#ece2ce] bg-[#fffbe9] p-8">
           <div className="mb-8 flex items-center">
-              <Calendar className="h-5 w-5 mr-2 text-point-blue" />
-               <span className="text-xl font-semibold text-main-text">イベント詳細</span>
-           </div>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="title">イベント名 *</Label>
-                  <Input
-                    id="title"
-                    value={formData.title}
-                    onChange={(e) => handleInputChange('title', e.target.value)}
-                    required
-                    className="bg-white/90"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="date">開催日 *</Label>
-                  <Input
-                    id="date"
-                    value={formData.date}
-                    onChange={(e) => handleInputChange('date', e.target.value)}
-                    onBlur={(e) => handleInputChange('date', formatDateValue(e.target.value))}
-                    required
-                    className="bg-white/90"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="startTime">開始時間 *</Label>
-                  <Input
-                    id="startTime"
-                    value={formData.startTime}
-                    onChange={(e) => handleInputChange('startTime', e.target.value)}
-                    onBlur={(e) => handleInputChange('startTime', formatTimeValue(e.target.value))}
-                    required
-                    className="bg-white/90"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="endTime">終了時間</Label>
-                  <Input
-                    id="endTime"
-                    value={formData.endTime}
-                    onChange={(e) => handleInputChange('endTime', e.target.value)}
-                    onBlur={(e) => handleInputChange('endTime', formatTimeValue(e.target.value))}
-                    className="bg-white/90"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="location">開催場所 *</Label>
-                  <Input
-                    id="location"
-                    value={formData.location}
-                    onChange={(e) => handleInputChange('location', e.target.value)}
-                    required
-                    className="bg-white/90"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="capacity">募集人数</Label>
-                  <Input
-                    id="capacity"
-                    type="number"
-                    value={formData.capacity}
-                    onChange={(e) => handleInputChange('capacity', e.target.value)}
-                    className="bg-white/90"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="pointReward">合計ポイント *</Label>
-                  <Input
-                    id="pointReward"
-                    type="number"
-                    value={formData.pointReward}
-                    onChange={(e) => handleInputChange('pointReward', e.target.value)}
-                    required
-                    className="bg-white/90"
-                  />
-                </div>
-              </div>
-
+            <Calendar className="h-5 w-5 mr-2 text-point-blue" />
+            <span className="text-xl font-semibold text-main-text">イベント詳細</span>
+          </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="description">詳細 *</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
+                <Label htmlFor="title">イベント名 *</Label>
+                <Input
+                  id="title"
+                  value={formData.title}
+                  onChange={(e) => handleInputChange('title', e.target.value)}
                   required
                   className="bg-white/90"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="requiredItems">持ち物</Label>
-                <Textarea
-                  id="requiredItems"
-                  value={formData.requiredItems}
-                  onChange={(e) => handleInputChange('requiredItems', e.target.value)}
+                <Label htmlFor="date">開催日 *</Label>
+                <Input
+                  id="date"
+                  value={formData.date}
+                  onChange={(e) => handleInputChange('date', e.target.value)}
+                  onBlur={(e) => handleInputChange('date', formatDateValue(e.target.value))}
+                  required
                   className="bg-white/90"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="specialNotes">特記事項</Label>
-                <Textarea
-                  id="specialNotes"
-                  value={formData.specialNotes}
-                  onChange={(e) => handleInputChange('specialNotes', e.target.value)}
+                <Label htmlFor="startTime">開始時間 *</Label>
+                <Input
+                  id="startTime"
+                  value={formData.startTime}
+                  onChange={(e) => handleInputChange('startTime', e.target.value)}
+                  onBlur={(e) => handleInputChange('startTime', formatTimeValue(e.target.value))}
+                  required
                   className="bg-white/90"
                 />
               </div>
 
-              <div className="flex justify-end space-x-4 pt-6">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => router.back()}
-                  className="border-[#eac6d9] text-[#e086b7] hover:bg-[#eac6d9] hover:text-white"
-                >
-                  キャンセル
-                </Button>
-                <Button
+              <div className="space-y-2">
+                <Label htmlFor="endTime">終了時間</Label>
+                <Input
+                  id="endTime"
+                  value={formData.endTime}
+                  onChange={(e) => handleInputChange('endTime', e.target.value)}
+                  onBlur={(e) => handleInputChange('endTime', formatTimeValue(e.target.value))}
+                  className="bg-white/90"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="location">開催場所 *</Label>
+                <Input
+                  id="location"
+                  value={formData.location}
+                  onChange={(e) => handleInputChange('location', e.target.value)}
+                  required
+                  className="bg-white/90"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="capacity">募集人数</Label>
+                <Input
+                  id="capacity"
+                  type="number"
+                  value={formData.capacity}
+                  onChange={(e) => handleInputChange('capacity', e.target.value)}
+                  className="bg-white/90"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="pointReward">合計ポイント *</Label>
+                <Input
+                  id="pointReward"
+                  type="number"
+                  value={formData.pointReward}
+                  onChange={(e) => handleInputChange('pointReward', e.target.value)}
+                  required
+                  className="bg-white/90"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description">詳細 *</Label>
+              <Textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => handleInputChange('description', e.target.value)}
+                required
+                className="bg-white/90"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="requiredItems">持ち物</Label>
+              <Textarea
+                id="requiredItems"
+                value={formData.requiredItems}
+                onChange={(e) => handleInputChange('requiredItems', e.target.value)}
+                className="bg-white/90"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="specialNotes">特記事項</Label>
+              <Textarea
+                id="specialNotes"
+                value={formData.specialNotes}
+                onChange={(e) => handleInputChange('specialNotes', e.target.value)}
+                className="bg-white/90"
+              />
+            </div>
+
+            <div className="flex justify-end space-x-4 pt-6">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router.back()}
+                className="border-[#eac6d9] text-[#e086b7] hover:bg-[#eac6d9] hover:text-white"
+              >
+                キャンセル
+              </Button>
+              <Button
                 type="submit"
                 className="
                 bg-blue-600
@@ -277,10 +272,10 @@ export default function EditEvent() {
                 scale-100
                 hover:scale-105
                 "
-                >
+              >
                 更新する
-               </Button>
-              </div>
+              </Button>
+            </div>
           </form>
         </div>
       </div>
