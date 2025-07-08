@@ -20,8 +20,8 @@ const getEventStatus = (status: string): '募集中' | '募集前' | '終了' =>
 
 export default function EventListPage() {
   const searchParams = useSearchParams()
-  const initialYear = searchParams.get('year')
-  const initialMonth = searchParams.get('month') // 1-indexed month
+  const initialYear = searchParams?.get('year')
+  const initialMonth = searchParams?.get('month') // 1-indexed month
 
   const [currentMonth, setCurrentMonth] = useState(() => {
     if (initialYear && initialMonth) {
@@ -248,7 +248,7 @@ export default function EventListPage() {
                 <EventCard
                   key={event.id}
                   {...event}
-                  participants={event.participants ?? 0} // ここでundefined対策
+                  participants={event.applicationsCount ?? 0}// ここでundefined対策
                   status={getEventStatus(event.status)}
                   isParticipatedByCurrentUser={userParticipatedEventIds.includes(event.id)} // 参加状況を渡す
                 />

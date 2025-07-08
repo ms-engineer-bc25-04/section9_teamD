@@ -122,7 +122,7 @@ export default function EditEvent() {
   }
 
   return (
-    <div className="min-h-screen p-4">
+    <div className="min-h-screen p-4 bg-[#fcf6ea]">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center mb-6">
           <Button
@@ -136,14 +136,11 @@ export default function EditEvent() {
           <h1 className="text-2xl font-bold text-main-text">イベントを編集</h1>
         </div>
 
-        <ProfileCard>
-          <ProfileCardHeader>
-            <ProfileCardTitle className="text-main-text flex items-center">
+         <div className="rounded-2xl shadow-md border border-[#ece2ce] bg-[#fffbe9] p-8">
+          <div className="mb-8 flex items-center">
               <Calendar className="h-5 w-5 mr-2 text-point-blue" />
-              イベント詳細
-            </ProfileCardTitle>
-          </ProfileCardHeader>
-          <ProfileCardContent>
+               <span className="text-xl font-semibold text-main-text">イベント詳細</span>
+           </div>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
@@ -153,6 +150,7 @@ export default function EditEvent() {
                     value={formData.title}
                     onChange={(e) => handleInputChange('title', e.target.value)}
                     required
+                    className="bg-white/90"
                   />
                 </div>
 
@@ -164,6 +162,7 @@ export default function EditEvent() {
                     onChange={(e) => handleInputChange('date', e.target.value)}
                     onBlur={(e) => handleInputChange('date', formatDateValue(e.target.value))}
                     required
+                    className="bg-white/90"
                   />
                 </div>
 
@@ -175,6 +174,7 @@ export default function EditEvent() {
                     onChange={(e) => handleInputChange('startTime', e.target.value)}
                     onBlur={(e) => handleInputChange('startTime', formatTimeValue(e.target.value))}
                     required
+                    className="bg-white/90"
                   />
                 </div>
 
@@ -185,6 +185,7 @@ export default function EditEvent() {
                     value={formData.endTime}
                     onChange={(e) => handleInputChange('endTime', e.target.value)}
                     onBlur={(e) => handleInputChange('endTime', formatTimeValue(e.target.value))}
+                    className="bg-white/90"
                   />
                 </div>
 
@@ -195,6 +196,7 @@ export default function EditEvent() {
                     value={formData.location}
                     onChange={(e) => handleInputChange('location', e.target.value)}
                     required
+                    className="bg-white/90"
                   />
                 </div>
 
@@ -205,6 +207,7 @@ export default function EditEvent() {
                     type="number"
                     value={formData.capacity}
                     onChange={(e) => handleInputChange('capacity', e.target.value)}
+                    className="bg-white/90"
                   />
                 </div>
 
@@ -216,6 +219,7 @@ export default function EditEvent() {
                     value={formData.pointReward}
                     onChange={(e) => handleInputChange('pointReward', e.target.value)}
                     required
+                    className="bg-white/90"
                   />
                 </div>
               </div>
@@ -227,6 +231,7 @@ export default function EditEvent() {
                   value={formData.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
                   required
+                  className="bg-white/90"
                 />
               </div>
 
@@ -236,6 +241,7 @@ export default function EditEvent() {
                   id="requiredItems"
                   value={formData.requiredItems}
                   onChange={(e) => handleInputChange('requiredItems', e.target.value)}
+                  className="bg-white/90"
                 />
               </div>
 
@@ -245,20 +251,38 @@ export default function EditEvent() {
                   id="specialNotes"
                   value={formData.specialNotes}
                   onChange={(e) => handleInputChange('specialNotes', e.target.value)}
+                  className="bg-white/90"
                 />
               </div>
 
               <div className="flex justify-end space-x-4 pt-6">
-                <Button type="button" variant="outline" onClick={() => router.back()}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.back()}
+                  className="border-[#eac6d9] text-[#e086b7] hover:bg-[#eac6d9] hover:text-white"
+                >
                   キャンセル
                 </Button>
-                <Button type="submit" className="bg-point-blue hover:bg-point-blue/90">
-                  更新する
-                </Button>
+                <Button
+                type="submit"
+                className="
+                bg-blue-600
+                hover:bg-blue-700
+                text-white
+                font-bold
+                shadow
+                transition
+                duration-200
+                scale-100
+                hover:scale-105
+                "
+                >
+                更新する
+               </Button>
               </div>
-            </form>
-          </ProfileCardContent>
-        </ProfileCard>
+          </form>
+        </div>
       </div>
     </div>
   )

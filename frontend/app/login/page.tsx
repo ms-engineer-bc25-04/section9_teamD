@@ -51,8 +51,15 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col justify-center items-center bg-[#f7f3ef]">
       <div className="w-full max-w-md bg-white rounded-[40px] shadow-lg p-8 pt-12 flex flex-col items-center">
         {/* 上部アイコン */}
-        <div className="rounded-full w-24 h-24 bg-gray-100 flex items-center justify-center mb-4 shadow">
-          <span className="text-4xl text-gray-400">⚪️</span>
+        <div>
+          {/* アイコン画像を表示 */}
+          <img
+          src="/chocot-logo.png"
+          alt="Chocotロゴ"
+          width={180}
+          height={180}
+          className="mb-8"
+          />
         </div>
         {/* タブ */}
         <div

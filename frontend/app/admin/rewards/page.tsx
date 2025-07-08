@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Button } from '../../../components/ui/button'
+import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 type Reward = {
   id: string;
@@ -11,10 +14,12 @@ type Reward = {
   createdAt: string;
 };
 
-const API_BASE = 'http://localhost:4000/api/rewards';
+const API_BASE = 'http://127.0.0.1:4000/api/rewards';
+//const API_BASE = 'http://localhost:4000/api/rewards';
 //const API_BASE = '/api/rewards';
 
 export default function RewardsPage() {
+  const router = useRouter();
   const [rewards, setRewards] = useState<Reward[]>([]);
   const [search, setSearch] = useState('');
   const [form, setForm] = useState<Partial<Reward>>({});
@@ -108,15 +113,26 @@ export default function RewardsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#faf6e6] p-8">
-      <h1 className="text-xl font-bold mb-4">優先権管理</h1>
+    <div className="min-h-screen bg-[#fcf6ea] p-8">
+      {/* ヘッダー部分をflexで横並びに */}
+      <div className="flex items-center mb-4">
+        <Button
+          variant="ghost"
+          onClick={() => router.push('/admin/menu')}
+          className="mr-4 text-main-text hover:bg-[#eac6d9]/30"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          管理ダッシュボードへ
+        </Button>
+      <h1 className="text-2xl font-bold">優先権管理</h1>
+      </div>
 
       {/* フォーム（新規・編集） */}
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-xl shadow p-6 max-w-2xl mx-auto mb-8 flex flex-col gap-3"
+        className="bg-[#fffbe9] rounded-xl shadow p-6 max-w-3xl mx-auto mb-8 flex flex-col gap-3"
       >
-        <div className="font-semibold text-base mb-1">{editId ? 'アイテム編集' : '新規登録'}</div>
+        <div className="text-2xl font-bold mb-2">{editId ? 'アイテム編集' : '新規登録'}</div>
         <input
           type="text"
           className="border rounded px-3 py-2"
@@ -152,7 +168,8 @@ export default function RewardsPage() {
         <div className="flex gap-2 mt-1">
           <button
             type="submit"
-            className="bg-blue-600 text-white font-bold px-5 py-2 rounded"
+            //className="bg-blue-600 text-white font-bold px-5 py-2 rounded"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2 rounded transition duration-200 scale-100 hover:scale-105"
           >
             {editId ? '更新' : '登録'}
           </button>
@@ -169,10 +186,10 @@ export default function RewardsPage() {
       </form>
 
       {/* 検索 */}
-      <div className="bg-white rounded-xl shadow p-6 max-w-2xl mx-auto mb-4">
+      <div className="bg-[#fffbe9] rounded-xl shadow p-6 max-w-3xl mx-auto mb-4">
         <div className="flex items-center gap-2 mb-2">
           <span className="text-yellow-500 text-lg">★</span>
-          <span className="font-semibold">優先権アイテム一覧</span>
+          <span className="text-2xl font-bold">優先権アイテム一覧</span>
         </div>
         <input
           type="text"
