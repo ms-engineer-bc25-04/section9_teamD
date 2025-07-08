@@ -6,9 +6,9 @@ import { app } from "firebase-admin";
 export const getEvents = async (req: Request, res: Response) => {
   const { year, month } = req.query;
 
-  const now = new Date()
-  const targetYear = year ?? now.getFullYear()
-  const targetMonth = month ?? now.getMonth() + 1
+  const now = new Date();
+  const targetYear = year ?? now.getFullYear();
+  const targetMonth = month ?? now.getMonth() + 1;
 
   try {
     const events = await prisma.event.findMany({
@@ -76,7 +76,13 @@ export const getEventById = async (req: Request, res: Response) => {
     if (!events) {
       return res.status(404).json({ error: "イベントが見つかりません" });
     }
-    res.json(events);
+
+    // 日付をYYYY-MM-DD形式に変換
+    const formattedDate = events.date.toISOString().split("T")[0];
+    res.json({
+      ...events,
+      date: formattedDate,
+    });
   } catch (error) {
     console.error("Error fetching events:", error);
     res.status(500).json({ error: "イベントの取得に失敗しました" });
@@ -247,26 +253,26 @@ export const applyEvent = async (req: Request, res: Response) => {
   // 必要な情報を取得
   const { eventId } = req.params;
   const userId = req.body.userId; // 本当は認証から取るのが理想
- // slotIdも必須なら取得
- const slotId = req.body.slotId || ""; // 必要なら
+  // slotIdも必須なら取得
+  const slotId = req.body.slotId || ""; // 必要なら
 
- try {
-   // 申込データをDBへ保存
-   const application = await prisma.eventApplication.create({
-     data: {
-       eventId,
-       userId,
-       slotId: slotId || undefined, // 空文字ならundefinedにする
-       status: "applied",
-       appliedAt: new Date(),
-       createdAt: new Date(),
-     },
-   });
-   res.status(201).json({ message: "申込OK", application });
- } catch (error) {
-   console.error("申込失敗", error);
-   res.status(500).json({ error: "申込失敗" });
- }
+  try {
+    // 申込データをDBへ保存
+    const application = await prisma.eventApplication.create({
+      data: {
+        eventId,
+        userId,
+        slotId: slotId || undefined, // 空文字ならundefinedにする
+        status: "applied",
+        appliedAt: new Date(),
+        createdAt: new Date(),
+      },
+    });
+    res.status(201).json({ message: "申込OK", application });
+  } catch (error) {
+    console.error("申込失敗", error);
+    res.status(500).json({ error: "申込失敗" });
+  }
 };
 
 // イベント参加キャンセル　【未検証】
@@ -277,11 +283,11 @@ export const cancelEvent = async (req: Request, res: Response) => {
   try {
     await prisma.eventApplication.updateMany({
       where: { eventId, userId },
-      data: { status: "cancelled" }
+      data: { status: "cancelled" },
     });
     res.status(200).json({ message: "キャンセルOK", eventId, userId });
   } catch (error) {
     console.error("キャンセル失敗", error);
     res.status(500).json({ error: "キャンセル失敗" });
   }
-}
+};
