@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserPoint, getUserPointHistory } from '../controllers/point-controller';
+import { getUserPoint, getUserPointHistory, grantPoint } from '../controllers/point-controller';
 
 const router = express.Router();
 
@@ -8,5 +8,8 @@ router.get('/:userId', getUserPoint);
 
 // ユーザーのポイント履歴
 router.get('/:userId/history', getUserPointHistory);
+
+// ★ ポイント付与（管理者）
+router.post('/', grantPoint);
 
 export default router;

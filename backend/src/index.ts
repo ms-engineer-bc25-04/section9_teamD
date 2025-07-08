@@ -6,6 +6,7 @@ import { requireAuth } from "./middlewares/auth-middleware";
 
 // 既存ルーター
 import rewardsRouter from "./routes/rewards";
+import usersRouter from "./routes/users";
 import eventsRouter from "./routes/events";
 import pointsRouter from "./routes/points";
 import privilegesRouter from "./routes/privileges";
@@ -34,6 +35,7 @@ app.get(
 
 // --- 各種ルーター登録 ---
 app.use("/api/rewards", rewardsRouter);
+app.use("/api/users", usersRouter)
 app.use("/api/events", eventsRouter);
 app.use("/api/points", pointsRouter);
 app.use("/api/privileges", privilegesRouter);
