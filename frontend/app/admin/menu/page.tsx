@@ -32,7 +32,7 @@ export default function AdminDashboard() {
       description: '新しいイベントを作成する',
       icon: Plus,
       color: 'bg-pink-200',
-      href: '/admin/events/new',      
+      href: '/admin/events/new',
     },
     {
       title: 'イベント管理', // 2番目
@@ -69,7 +69,7 @@ export default function AdminDashboard() {
     },
   ]
 
- return (
+  return (
     // ★ 背景色も標準色に変更（例：bg-[#faf6e6] #fcf6ea→ bg-yellow-50）
     <div className="min-h-screen bg-[#fcf6ea] px-4 py-8">
       <div className="max-w-7xl mx-auto">
@@ -79,20 +79,16 @@ export default function AdminDashboard() {
           {/* 左側：ロゴ＋タイトル */}
           <div className="flex items-center gap-6">
             <img
-            src="/chocot-logo.png"
-            alt="Chocotロゴ"
-            width={80}
-            height={80}
-            className="rounded-full"
+              src="/chocot-logo.png"
+              alt="Chocotロゴ"
+              width={80}
+              height={80}
+              className="rounded-full"
             />
-           <div>
-             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              管理ダッシュボード
-             </h1>
-             <p className="text-gray-600">
-              PTA活動管理システム「ちょこっと」 - さくら保育園
-             </p>
-           </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">管理ダッシュボード</h1>
+              <p className="text-gray-600">PTA活動管理システム「ちょこっと」 - さくら保育園</p>
+            </div>
           </div>
           {/* 右側：通知・ログアウト */}
           <div className="flex items-center gap-2">
@@ -102,7 +98,7 @@ export default function AdminDashboard() {
             >
               <Bell className="h-4 w-4 mr-2" />
               通知
-              <Badge className="ml-2 bg-pink-400 text-white">3</Badge>
+              <Badge className="ml-2 bg-pink-400 text-white"></Badge>
             </Button>
             <Button
               variant="outline"
@@ -139,8 +135,8 @@ export default function AdminDashboard() {
                       {'count' in item && typeof item.count === 'number' && item.count > 0 && (
                         <Badge className="bg-purple-400 text-white text-sm px-3 py-1 rounded-full">
                           {item.count}
-                          </Badge>
-                        )}
+                        </Badge>
+                      )}
                     </div>
                   </ProfileCardHeader>
                   <ProfileCardContent className="px-4 pt-0 pb-4">
