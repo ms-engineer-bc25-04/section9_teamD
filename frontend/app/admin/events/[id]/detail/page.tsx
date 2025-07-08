@@ -7,7 +7,7 @@ import { MobileNav } from '@/components/layout/mobile-nav'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Calendar, Clock, MapPin, ClipboardList, MessageSquare } from 'lucide-react'
-import { getEventById } from '@/actions/events'
+import { getEventById } from '@/actions/admin-events'
 import type { Event } from '@/data/events'
 import * as React from 'react'
 
