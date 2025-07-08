@@ -45,3 +45,6 @@ Thumbs.db
 
 frontend/package-lock.json
 backend/package-lock.json
+
+/public/sw.js
+/public/workbox-*.js
