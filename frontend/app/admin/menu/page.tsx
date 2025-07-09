@@ -98,7 +98,7 @@ export default function AdminDashboard() {
             >
               <Bell className="h-4 w-4 mr-2" />
               通知
-              <Badge className="ml-2 bg-pink-400 text-white"></Badge>
+              {/* <Badge className="ml-2 bg-pink-400 text-white"></Badge> */}
             </Button>
             <Button
               variant="outline"

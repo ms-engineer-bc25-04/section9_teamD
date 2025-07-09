@@ -18,15 +18,37 @@ export default function PriorityRightsPage() {
   const userId = "user1"
 
   // 優先権情報をロード
-  useEffect(() => {
-    const loadPriorityRights = async () => {
-      setIsLoading(true)
-      const rights = await getUserPriorityRights(userId)
-      setUserPriorityRights(rights)
-      setIsLoading(false)
-    }
-    loadPriorityRights()
-  }, [userId])
+  // useEffect(() => {
+  //   const loadPriorityRights = async () => {
+  //     setIsLoading(true)
+  //     const rights = await getUserPriorityRights(userId)
+  //     setUserPriorityRights(rights)
+  //     setIsLoading(false)
+  //   }
+  //   loadPriorityRights()
+  // }, [userId])
+
+useEffect(() => {
+  setIsLoading(true)
+  // 本来は getUserPriorityRights(userId) を呼ぶが、ダミーデータで上書き
+  setTimeout(() => {
+    setUserPriorityRights([
+      {
+        id: "demo-1",
+        userId: userId,
+        name: "発表会の前列席 優先権",
+        description: "100ポイントと交換した、発表会の前列席の優先権です。",
+        status: "未使用",
+        expirationDate: "2025-08-31",
+        dateUsed: undefined,
+        dateAcquired: "2025-07-22",
+        // pointsUsed: 100,
+      }
+    ])
+    setIsLoading(false)
+  }, 600) // 読み込み演出のため0.6秒待機
+}, [userId])
+
 
   const getStatusColor = (status: "未使用" | "使用済み" | "期限切れ") => {
     switch (status) {
