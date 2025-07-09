@@ -7,7 +7,10 @@ import { MobileNav } from "@/components/layout/mobile-nav"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Gift, History, Clock } from "lucide-react"
-import { getUserPoints, spendPoints, getPointHistory } from "@/actions/points"
+// import { getUserPoints, spendPoints, getPointHistory } from "@/actions/points"
+// ダミー用
+import { getUserPoints, spendPoints, getPointHistory } from "@/lib/api-client"
+
 
 interface PointTransaction {
   id: string
@@ -79,21 +82,32 @@ export default function PointsPage() {
   // ポイント情報と履歴をロード
   useEffect(() => {
     const loadData = async () => {
-      const [points, history] = await Promise.all([getUserPoints(userId), getPointHistory(userId)])
+      const [points, history] = await Promise.all([getUserPoints("",userId), getPointHistory(userId)])
       setCurrentUserPoints(points)
       setUserPointHistory(history)
     }
     loadData()
   }, [userId])
 
+
+
+
+
+
   const handleExchange = async (itemId: string, points: number, itemName: string) => {
     setIsPending(true)
     setExchangeMessage("")
-
+  
     const itemToExchange = exchangeItems.find((item) => item.id === itemId)
-    if (itemToExchange?.limitType === "once_per_family") {
+    if (!itemToExchange) {
+      setExchangeMessage("交換対象が見つかりませんでした。")
+      setIsPending(false)
+      return
+    }
+  
+    if (itemToExchange.limitType === "once_per_family") {
       const hasExchanged = userPointHistory.some(
-        (tx) => tx.type === "spend" && tx.description.includes(itemToExchange.name),
+        (tx) => tx.type === "spend" && tx.description.includes(itemToExchange.name)
       )
       if (hasExchanged) {
         setExchangeMessage("この景品は1家庭1回までしか交換できません。")
@@ -101,16 +115,72 @@ export default function PointsPage() {
         return
       }
     }
-
-    const result = await spendPoints(userId, points, `${itemName}と交換`)
+  
+    // ✅ ============ ダミーで即成功 =============
+    const result = { success: true, message: `${itemToExchange.name}と交換が完了しました！` }
+  
+    // ✅ 【本来のAPI呼び出し版（残す）】
+    // const result = await spendPoints(userId, points, `${itemName}と交換`)
+  
     setExchangeMessage(result.message)
+  
     if (result.success) {
-      const [updatedPoints, updatedHistory] = await Promise.all([getUserPoints(userId), getPointHistory(userId)])
-      setCurrentUserPoints(updatedPoints)
-      setUserPointHistory(updatedHistory)
+      // ✅ 【ダミー】ポイントを引いて履歴を足す
+      setCurrentUserPoints(currentUserPoints - itemToExchange.pointsRequired)
+      setUserPointHistory([
+        ...userPointHistory,
+        {
+          id: String(Date.now()),
+          userId: userId,
+          type: "spend",
+          amount: itemToExchange.pointsRequired,
+          description: `${itemToExchange.name}と交換`,
+          date: new Date().toISOString(),
+        },
+      ])
+  
+      // ✅ 【本来のAPI連携で履歴・残高を再取得する版（残す）】
+      // const [updatedPoints, updatedHistory] = await Promise.all([
+      //   getUserPoints(userId),
+      //   getPointHistory(userId)
+      // ])
+      // setCurrentUserPoints(updatedPoints)
+      // setUserPointHistory(updatedHistory)
     }
+  
     setIsPending(false)
   }
+  
+
+
+
+
+
+  // const handleExchange = async (itemId: string, points: number, itemName: string) => {
+  //   setIsPending(true)
+  //   setExchangeMessage("")
+
+  //   const itemToExchange = exchangeItems.find((item) => item.id === itemId)
+  //   if (itemToExchange?.limitType === "once_per_family") {
+  //     const hasExchanged = userPointHistory.some(
+  //       (tx) => tx.type === "spend" && tx.description.includes(itemToExchange.name),
+  //     )
+  //     if (hasExchanged) {
+  //       setExchangeMessage("この景品は1家庭1回までしか交換できません。")
+  //       setIsPending(false)
+  //       return
+  //     }
+  //   }
+
+  //   const result = await spendPoints(userId, points, `${itemName}と交換`)
+  //   setExchangeMessage(result.message)
+  //    if (result.success) {
+  //     const [updatedPoints, updatedHistory] = await Promise.all([getUserPoints(userId), getPointHistory(userId)])
+  //     setCurrentUserPoints(updatedPoints)
+  //     setUserPointHistory(updatedHistory)
+  //   }
+  //   setIsPending(false)
+  // }
 
   const isExchangeDisabled = (item: (typeof exchangeItems)[0]) => {
     if (isPending || currentUserPoints < item.pointsRequired) {
