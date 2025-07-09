@@ -1,8 +1,8 @@
 export const dummyEventsData = [
   {
     id: "event1",
-    title: "運動会",
-    date: "2025-09-15",
+    title: "読み聞かせ",
+    date: "2025-07-22",
     durationMinutes: 120,
     totalPoints: 50,
     timeSlots: [
@@ -16,7 +16,7 @@ export const dummyEventsData = [
       {
         slot: "午後",
         participants: [
-          { id: "parent3", name: "鈴木一郎", email: "suzuki@example.com" },
+          { id: "parent3", name: "中村あやか", email: "ayaka@example.com" },
         ],
       },
     ],
@@ -30,21 +30,21 @@ export const dummyParentsData = [
     name: "田中太郎",
     email: "tanaka@example.com",
     currentPoints: 100,
-    totalPoints: 200,
+    totalPoints: 100,
   },
   {
     id: "parent2",
     name: "佐藤花子",
     email: "sato@example.com",
     currentPoints: 80,
-    totalPoints: 150,
+    totalPoints: 80,
   },
   {
     id: "parent3",
-    name: "鈴木一郎",
-    email: "suzuki@example.com",
-    currentPoints: 60,
-    totalPoints: 120,
+    name: "中村あやか",
+    email: "ayaka@example.com",
+    currentPoints: 0,
+    totalPoints: 0,
   },
   // 必要に応じて他の保護者も追加
 ];
