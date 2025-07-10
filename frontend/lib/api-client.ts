@@ -37,7 +37,7 @@ export type Participant = {
   // ポイント確認
   export async function getUserPoints(token: string, userId: string): Promise<number> {
     console.log("DEBUG getUserPoints dummy:", token, userId)
-    return 250
+    return 100
   }
     
 
