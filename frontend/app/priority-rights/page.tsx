@@ -36,10 +36,10 @@ useEffect(() => {
       {
         id: "demo-1",
         userId: userId,
-        name: "発表会の前列席 優先権",
-        description: "100ポイントと交換した、発表会の前列席の優先権です。",
+        name: "運動会前列スペース 優先権",
+        description: "100ポイントと交換した、運動会前列スペースの優先権です。",
         status: "未使用",
-        expirationDate: "2025-08-31",
+        expirationDate: "2025-10-04",
         dateUsed: undefined,
         dateAcquired: "2025-07-22",
         // pointsUsed: 100,

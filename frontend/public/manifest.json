@@ -1,6 +1,6 @@
 {
-  "name": "PTA活動アプリ「ちょこっと」",
-  "short_name": "ちょこっと",
+  "name": "PTA活動アプリ",
+  "short_name": "CHOCOT",
   "description": "保護者のPTA活動参加を促進するアプリ",
   "start_url": "/login",
   "display": "standalone",

@@ -11,7 +11,7 @@ const mPlusRounded1c = M_PLUS_Rounded_1c({
 })
 
 export const metadata: Metadata = {
-  title: 'PTA活動支援アプリ「ちょこっと」',
+  title: 'ちょこっと',
   description: '保護者のPTA活動参加を促進するアプリ',
   generator: 'v0.dev',
   manifest: '/manifest.json',

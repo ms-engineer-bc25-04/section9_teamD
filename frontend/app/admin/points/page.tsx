@@ -175,7 +175,7 @@ export default function PointsManagement() {
               {selectedEvent && (
                 <div className="mt-4 p-3 rounded-lg text-sm text-[#3C2A1E]" style={{ background: "#EAF6FF" }}>
                   <p><b>所要時間:</b> {selectedEvent.durationMinutes}分</p>
-                  <p><b>推奨ポイント:</b> {selectedEvent.totalPoints}pt</p>
+                  <p><b>付与ポイント:</b> {selectedEvent.totalPoints}pt</p>
                 </div>
               )}
             </CardContent>

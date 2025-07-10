@@ -44,7 +44,7 @@ export default function PointsPage() {
   const exchangeItems = [
     {
       id: "item1",
-      name: "運動会前列スペース 秋",
+      name: "運動会前列スペース",
       pointsRequired: 100,
       description: "1家庭1回まで、定員6家庭",
       limitType: "once_per_family",
@@ -56,13 +56,13 @@ export default function PointsPage() {
       description: "各時間帯ごとに枠制限あり",
       limitType: "no_limit",
     },
-    {
-      id: "item3",
-      name: "保護者参観日前列スペース",
-      pointsRequired: 50,
-      description: "年2回、定員4家庭",
-      limitType: "twice_per_year",
-    },
+    // {
+    //   id: "item3",
+    //   name: "保護者参観日前列スペース",
+    //   pointsRequired: 50,
+    //   description: "年2回、定員4家庭",
+    //   limitType: "twice_per_year",
+    // },
     {
       id: "item4",
       name: "発表会前列スペース",
@@ -70,13 +70,13 @@ export default function PointsPage() {
       description: "1家庭1回まで、定員6家庭",
       limitType: "once_per_family",
     },
-    {
-      id: "item5",
-      name: "卒園式前列スペース 冬",
-      pointsRequired: 150,
-      description: "1家庭1回まで、定員6家庭",
-      limitType: "once_per_family",
-    },
+    // {
+    //   id: "item5",
+    //   name: "卒園式前列スペース 冬",
+    //   pointsRequired: 150,
+    //   description: "1家庭1回まで、定員6家庭",
+    //   limitType: "once_per_family",
+    // },
   ]
 
   // ポイント情報と履歴をロード

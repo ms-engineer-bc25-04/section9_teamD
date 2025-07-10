@@ -79,7 +79,7 @@ export default function CreateEvent() {
         capacity: formData.capacity ? Number(formData.capacity) : null, // 数値に変換
         requiredItems: formData.requiredItems, // 任意項目
         specialNotes: formData.specialNotes,
-        createdById: 'afec11ac-018e-43bc-b1c6-7bc62edf38f3', // 仮のユーザーID
+        createdById: 'ae388d6b-5ab2-4414-a47c-f4fa0e346447', // 仮のユーザーID
         deadline: formData.date, // 必要なら
         pointReward: Number(formData.pointReward), // 合計ポイントを数値に変換
         privilegeAllowed: true,
