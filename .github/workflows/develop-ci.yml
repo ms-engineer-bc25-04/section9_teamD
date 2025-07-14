@@ -1,0 +1,27 @@
+name: developブランチ用CI
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - run: npm ci                # 依存パッケージのインストール（これだけでOK）
+    - run: npm run lint          # コードチェック/フォーマット（必要ならpackage.jsonに定義）
+    - run: npm test              # テスト実行（必要ならpackage.jsonに定義）
