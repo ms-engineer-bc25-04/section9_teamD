@@ -14,9 +14,12 @@ type Reward = {
   createdAt: string;
 };
 
+// NOTE: 本番環境/開発環境ごとにAPI_BASEを切り替えます。
+// 今はローカル開発用（Docker: バックエンドAPIがlocalhost:4000で起動）
+// TODO: .envや環境変数で動的に切り替えたい。
 const API_BASE = 'http://127.0.0.1:4000/api/rewards';
-//const API_BASE = 'http://localhost:4000/api/rewards';
-//const API_BASE = '/api/rewards';
+//const API_BASE = 'http://localhost:4000/api/rewards'; // 古い形式、今は未使用
+//const API_BASE = '/api/rewards'; // フロント・バック統合時用
 
 export default function RewardsPage() {
   const router = useRouter();
@@ -35,6 +38,7 @@ export default function RewardsPage() {
     const data = await res.json();
     setRewards(data);
   } catch (err) {
+    // TODO: ユーザーにもっと詳細なエラー内容を表示したい
     alert('優先権アイテムの取得に失敗しました');
     console.error(err);
   }
