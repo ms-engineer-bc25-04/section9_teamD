@@ -14,7 +14,7 @@
 | 技術・ツール         | バージョン     |
 |----------------------|---------------|
 | TypeScript           | 5.4.0         |
-| Node.js              | 18.x/20.x/22.x（どれでも可） |
+| Node.js              | 18.x/20.x/22.x（いずれか） |
 | Next.js              | 15.2.4        |
 | React                | 18.2.0        |
 | Firebase             | 11.9.1        |
@@ -107,7 +107,7 @@ frontend/
     node -v
     npm -v
     ```
-    - **Node.js 18.x系 / 20.x系 / 22.x系 のいずれかで動作確認済**
+    - **Node.js 18.x系 / 20.x系 / 22.x系 のいずれかでOK**
 
 3. **依存パッケージをインストール**
     ```bash
@@ -118,14 +118,30 @@ frontend/
     ```bash
     npm run dev
     ```
-    ブラウザで [http://localhost:3000]を開く
+    - ブラウザで [http://localhost:3000]を開きます。
+    - バックエンドAPI/DBは**ルートディレクトリでDocker起動済みが前提**です。
 
-5. **自分のブランチを作成して開発開始**
-    ```bash
-    git checkout -b feature/your-feature-name
-    ```
+### その他・運用のポイント
 
-- **困ったときは「Node.js 18.x系 & npm 9.8.1」に切り替えて動作確認してみてください。**
+- **フロントエンドはDocker不要。npm scriptsで直接開発する運用が標準です。**
+- **API/DB（バックエンド）はDockerで管理しています。**  
+- **全体運用ルールや起動手順のまとめは、ルートディレクトリ直下の`README.md`も参照してください。**
+
+---
+
+## 環境変数例（.env）
+
+```env
+NEXT_PUBLIC_API_URL=xxxxxxxxx
+
+# Firebase Config
+NEXT_PUBLIC_FIREBASE_API_KEY=xxxxxxxxxxxxxxxxxxxxx
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=xxxxxxxxxxxxxxxxxxxxx
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=xxxxxxxxxxxxxxxxxxxxx
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=xxxxxxxxxxxxxxxxxxxxx
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=xxxxxxxxxxxxxxxxxxxxx
+NEXT_PUBLIC_FIREBASE_APP_ID=xxxxxxxxxxxxxxxxxxxxx
+```
 
 ---
 
