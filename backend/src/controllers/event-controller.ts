@@ -74,7 +74,8 @@ export const getEventById = async (req: Request, res: Response) => {
     });
 
     if (!events) {
-      return res.status(404).json({ error: "イベントが見つかりません" });
+      res.status(404).json({ error: "イベントが見つかりません" });
+      return;
     }
 
     // 日付をYYYY-MM-DD形式に変換
@@ -105,8 +106,11 @@ export const createEvent = async (req: Request, res: Response) => {
     deadline,
     pointReward,
     privilegeAllowed,
-    createdById,
   } = req.body;
+
+  // 認証情報からユーザーIDを取得
+  const user = (req as any).user;
+  const createdById = user?.uid;
 
   // バリデーション: 必須項目のチェック
   if (
@@ -118,20 +122,19 @@ export const createEvent = async (req: Request, res: Response) => {
     !location ||
     !createdById
   ) {
-    return res.status(400).json({ error: "必須項目が不足しています" });
+    res.status(400).json({ error: "必須項目が不足しています" });
+    return;
   }
 
   // バリデーション: 日付と時間のフォーマットチェック
   if (isNaN(new Date(date).getTime())) {
-    return res
-      .status(400)
-      .json({ error: "開催日のフォーマットが正しくありません" });
+    res.status(400).json({ error: "開催日のフォーマットが正しくありません" });
+    return;
   }
 
   if (deadline && isNaN(new Date(deadline).getTime())) {
-    return res
-      .status(400)
-      .json({ error: "締切日のフォーマットが正しくありません" });
+    res.status(400).json({ error: "締切日のフォーマットが正しくありません" });
+    return;
   }
 
   // prismaを使ってイベントを作成
@@ -159,7 +162,8 @@ export const createEvent = async (req: Request, res: Response) => {
     res.status(201).json(newEventById);
   } catch (error) {
     console.error("Error creating event:", error);
-    return res.status(500).json({ error: "イベント作成に失敗しました" });
+    res.status(500).json({ error: "イベント作成に失敗しました" });
+    return;
   }
 };
 
@@ -184,7 +188,8 @@ export const updateEvent = async (req: Request, res: Response) => {
   try {
     const exists = await prisma.event.findUnique({ where: { id } });
     if (!exists) {
-      return res.status(404).json({ error: "イベントが見つかりません" });
+      res.status(404).json({ error: "イベントが見つかりません" });
+      return;
     }
 
     const updatedEvent = await prisma.event.update({
@@ -251,9 +256,19 @@ export const getEventParticipants = async (req: Request, res: Response) => {
 
 export const applyEvent = async (req: Request, res: Response) => {
   const { id: eventId } = req.params;
-  const { userId } = req.body.userId;
+  const userId = (req as any).user?.uid;
 
   try {
+    // イベントが存在するかチェック
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+    });
+    if (!event) {
+      res.status(404).json({ error: "イベントが見つかりません" });
+      return;
+    }
+
+    // 申し込み処理
     const application = await applyEventService(eventId, userId);
     res.status(201).json({ message: "申込成功", application });
   } catch (error) {
@@ -262,40 +277,19 @@ export const applyEvent = async (req: Request, res: Response) => {
   }
 };
 
-// 本来は認証から取得する
-// export const applyEvent = async (req: Request, res: Response) => {
-//   console.log("applyEventに到達した");
-//   // 必要な情報を取得
-//   const { eventId } = req.params;
-//   const userId = req.body.userId; // 本当は認証から取るのが理想
-//   // slotIdも必須なら取得
-//   const slotId = req.body.slotId || ""; // 必要なら
-
-//   try {
-//     // 申込データをDBへ保存
-//     const application = await prisma.eventApplication.create({
-//       data: {
-//         eventId,
-//         userId,
-//         slotId: slotId || undefined, // 空文字ならundefinedにする
-//         status: "applied",
-//         appliedAt: new Date(),
-//         createdAt: new Date(),
-//       },
-//     });
-//     res.status(201).json({ message: "申込OK", application });
-//   } catch (error) {
-//     console.error("申込失敗", error);
-//     res.status(500).json({ error: "申込失敗" });
-//   }
-// };
-
 // イベント参加キャンセル　【未検証】
 export const cancelEvent = async (req: Request, res: Response) => {
   const { eventId } = req.params;
-  const userId = req.body.userId;
+  const userId = (req as any).user?.uid;
 
   try {
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+    });
+    if (!event) {
+      res.status(404).json({ error: "イベントが見つかりません" });
+      return;
+    }
     await prisma.eventApplication.updateMany({
       where: { eventId, userId },
       data: { status: "cancelled" },
