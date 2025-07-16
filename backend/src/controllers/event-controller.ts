@@ -1,6 +1,6 @@
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
 import prisma from "../../prisma/client";
-import { app } from "firebase-admin";
+import { applyEvent as applyEventService } from "../services/applyEvent";
 
 // GET イベント一覧取得
 export const getEvents = async (req: Request, res: Response) => {
@@ -248,32 +248,47 @@ export const getEventParticipants = async (req: Request, res: Response) => {
 };
 
 // イベント参加申込
+
 export const applyEvent = async (req: Request, res: Response) => {
-  console.log("applyEventに到達した");
-  // 必要な情報を取得
-  const { eventId } = req.params;
-  const userId = req.body.userId; // 本当は認証から取るのが理想
-  // slotIdも必須なら取得
-  const slotId = req.body.slotId || ""; // 必要なら
+  const { id: eventId } = req.params;
+  const { userId } = req.body.userId;
 
   try {
-    // 申込データをDBへ保存
-    const application = await prisma.eventApplication.create({
-      data: {
-        eventId,
-        userId,
-        slotId: slotId || undefined, // 空文字ならundefinedにする
-        status: "applied",
-        appliedAt: new Date(),
-        createdAt: new Date(),
-      },
-    });
-    res.status(201).json({ message: "申込OK", application });
+    const application = await applyEventService(eventId, userId);
+    res.status(201).json({ message: "申込成功", application });
   } catch (error) {
     console.error("申込失敗", error);
-    res.status(500).json({ error: "申込失敗" });
+    res.status(400).json({ error: "申込に失敗しました" });
   }
 };
+
+// 本来は認証から取得する
+// export const applyEvent = async (req: Request, res: Response) => {
+//   console.log("applyEventに到達した");
+//   // 必要な情報を取得
+//   const { eventId } = req.params;
+//   const userId = req.body.userId; // 本当は認証から取るのが理想
+//   // slotIdも必須なら取得
+//   const slotId = req.body.slotId || ""; // 必要なら
+
+//   try {
+//     // 申込データをDBへ保存
+//     const application = await prisma.eventApplication.create({
+//       data: {
+//         eventId,
+//         userId,
+//         slotId: slotId || undefined, // 空文字ならundefinedにする
+//         status: "applied",
+//         appliedAt: new Date(),
+//         createdAt: new Date(),
+//       },
+//     });
+//     res.status(201).json({ message: "申込OK", application });
+//   } catch (error) {
+//     console.error("申込失敗", error);
+//     res.status(500).json({ error: "申込失敗" });
+//   }
+// };
 
 // イベント参加キャンセル　【未検証】
 export const cancelEvent = async (req: Request, res: Response) => {
