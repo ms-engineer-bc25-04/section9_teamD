@@ -14,7 +14,7 @@
 | 技術・ツール         | バージョン例   |
 |----------------------|---------------|
 | TypeScript           | 5.8.3         |
-| Node.js              | 18.x/20.x/22.x（どれでも可） |
+| Node.js              | 18.x/20.x/22.x（いずれか） |
 | Express              | 5.1.0         |
 | Prisma               | 6.10.1        |
 | MySQL                | 8             |
@@ -99,42 +99,77 @@ backend/
     node -v
     npm -v
     ```
-    - **Node.js 18.x系 / 20.x系 / 22.x系 のいずれかで動作確認済（18.x系推奨）**
+    - **Node.js 18.x系 / 20.x系 / 22.x系 のいずれかでOK**
 
-3. **必要ファイルの準備**
-
-    - `backend/.env`（サンプル: `.env.example`）に必要な環境変数を記入（DB接続/Firebase認証/Stripe など）
-
-4. **Dockerコンテナの起動**
-    ※必ずルートディレクトリ（section9_teamD/）直下で実行！
+3. **Dockerコンテナの起動**
+    ※通常はDockerコンテナとしてバックエンド・DBを管理しています。  
+      ルートディレクトリ（section9_teamD/）直下で下記コマンドを実行してください。
 
     ```bash
-    docker-compose up -d
+    docker compose up -d
     ```
-    MySQL・バックエンドAPIなど全サービスが起動
+    - MySQL・バックエンドAPIなど全サービスが起動します。
 
-5. **依存パッケージのインストール**
+4. **PrismaマイグレーションとDB初期化（初回のみ）**
+
+    ```bash
+    docker compose exec backend npx prisma migrate dev --name init
+    ```
+
+5. **開発サーバーの起動**
+
+   - Docker起動後、自動的に[http://localhost:4000]でAPIサーバーが立ち上がります。
+
+
+### (参考)ローカルでNode.js単体で開発したい場合
+
+※基本は不要です。直接TypeScriptでコードを試したい・個別デバッグしたい場合のみ。
+
+1. **依存パッケージのインストール**
 
     ```bash
     cd backend
     npm install
     ```
-
-6. **PrismaマイグレーションとDB初期化**
-
-    ```bash
-    npm run migrate        # Prismaマイグレーション適用
-    npm run generate       # Prismaクライアント生成
-    npm run seed           # 初期データ投入 (必要な場合)
-    npm run studio         # Prisma StudioでDBブラウザ確認（任意）
-    ```
-
-7. **開発サーバーの起動**
+2. **開発サーバーの起動**
 
     ```bash
     npm run dev
     ```
-    APIサーバー: http://localhost:4000 で起動
+    - ブラウザで[http://localhost:4000]を開きます。
+
+3. **（任意）テスト実行**
+
+    ```bash
+    npm run test
+    ```
+
+- **通常運用はDocker管理です。npm install等は直接開発時以外は不要です！**
+- **フロントエンドとのAPI連携もDockerで自動的に接続されます。**
+- **全体運用ルールや起動手順のまとめは、ルートディレクトリ直下の`README.md`も参照してください。**
+
+---
+
+## よく使うPrisma関連コマンド（必要に応じて）
+
+以下は主に**直接バックエンドを開発/デバッグしたい場合**や**DBスキーマ変更時**に使用します。
+
+```bash
+# マイグレーション適用（DBスキーマの反映）
+npm run migrate
+
+# Prismaクライアント生成（モデル更新時）
+npm run generate
+
+# シーディング（初期データ投入）
+npm run seed
+
+# Prisma Studio（GUIでDBを確認）
+npm run studio
+```
+
+- 通常は docker compose exec backend npx prisma migrate dev --name init だけでOKです。
+- 詳細な手順や使い方はチーム運用にあわせて適宜調整してください。
 
 ---
 
