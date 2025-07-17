@@ -18,8 +18,6 @@ type Reward = {
 // 今はローカル開発用（Docker: バックエンドAPIがlocalhost:4000で起動）
 // TODO: .envや環境変数で動的に切り替えたい。
 const API_BASE = 'http://127.0.0.1:4000/api/rewards';
-//const API_BASE = 'http://localhost:4000/api/rewards'; // 古い形式、今は未使用
-//const API_BASE = '/api/rewards'; // フロント・バック統合時用
 
 export default function RewardsPage() {
   const router = useRouter();
@@ -91,7 +89,6 @@ export default function RewardsPage() {
     const onlyId = reward.id.split(':')[0]; // 余計な「:1」をカット
     setForm(reward);
     setEditId(onlyId); // ここでstringに統一
-    console.log('editId:', onlyId); // 追加
   };
 
   // 削除
@@ -118,7 +115,6 @@ export default function RewardsPage() {
 
   return (
     <div className="min-h-screen bg-[#fcf6ea] p-8">
-      {/* ヘッダー部分をflexで横並びに */}
       <div className="flex items-center mb-4">
         <Button
           variant="ghost"
@@ -172,7 +168,6 @@ export default function RewardsPage() {
         <div className="flex gap-2 mt-1">
           <button
             type="submit"
-            //className="bg-blue-600 text-white font-bold px-5 py-2 rounded"
             className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2 rounded transition duration-200 scale-100 hover:scale-105"
           >
             {editId ? '更新' : '登録'}
