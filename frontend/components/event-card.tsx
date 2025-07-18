@@ -10,7 +10,7 @@ interface EventCardProps {
   date: string
   time: string
   location: string
-  points: number // プロパティとしては残すが、表示には使用しない
+  // points: number // プロパティとしては残すが、表示には使用しない
   status: "募集前" | "募集中" | "終了"
   participants: number
   maxParticipants: number
@@ -36,7 +36,7 @@ export function EventCard({
   date,
   time,
   location,
-  points, // 表示には使用しない
+  // points, // 表示には使用しない
   status,
   participants,
   maxParticipants,

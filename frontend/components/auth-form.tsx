@@ -21,7 +21,7 @@ interface AuthFormProps {
 export function AuthForm({ userType }: AuthFormProps) {
   const [formType, setFormType] = useState<FormType>("login")
   const [isPending, startTransition] = useTransition()
-  const accentColor = userType === "parent" ? "pink-accent" : "blue-accent"
+  // const accentColor = userType === "parent" ? "pink-accent" : "blue-accent"
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
