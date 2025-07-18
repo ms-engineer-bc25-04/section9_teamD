@@ -11,6 +11,9 @@ import {
 } from '../../../components/ui/profile-card'
 import { Badge } from '../../../components/ui/badge'
 import { Calendar, Plus, Award, CreditCard, LogOut, Bell, Users, Star } from 'lucide-react'
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from '../../../lib/firebase' // Firebaseの認証インスタンスをインポート
+import { useEffect, useState } from 'react'
 
 // 型定義を追加
 interface MenuItem {
@@ -25,6 +28,39 @@ interface MenuItem {
 
 export default function AdminDashboard() {
   const router = useRouter()
+  const [isAuthorized, setIsAuthorized] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        router.push('/login') // 未認証の場合はログインページへリダイレクト
+        return
+      }
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/by-firebase-uid/${user.uid}`
+        )
+        const userProfile = await res.json()
+
+        if (userProfile.role === 'staff') {
+          setIsAuthorized(true)
+        } else {
+          router.push('/') // 権限がない場合はホームへリダイレクト
+        }
+      } catch (error) {
+        console.error('ユーザープロフィールの取得に失敗しました:', error)
+        router.push('/login') // エラーが発生した場合もログインページへリダイレクト
+      } finally {
+        setIsLoading(false)
+      }
+    })
+    return () => unsubscribe()
+  }, [])
+
+  if (isLoading || !isAuthorized) {
+    return null // ローディング中または未認証の場合は何も表示しない
+  }
 
   const menuItems = [
     {
