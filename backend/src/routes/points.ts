@@ -1,5 +1,6 @@
 import express from 'express';
-import { getUserPoint, getUserPointHistory, grantPoint } from '../controllers/point-controller';
+import { getUserPoint, getUserPointHistory, grantPoint, spendPoint } from '../controllers/point-controller';
+
 
 const router = express.Router();
 
@@ -12,4 +13,6 @@ router.get('/:userId/history', getUserPointHistory);
 // ★ ポイント付与（管理者）
 router.post('/', grantPoint);
 
+// ポイント交換
+router.post("/spend", spendPoint);
 export default router;

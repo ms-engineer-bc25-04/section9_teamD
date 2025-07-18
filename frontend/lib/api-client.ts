@@ -35,39 +35,32 @@ export type Participant = {
   
 
   // ポイント確認
+  // 今何ポイントあるかを取得
   export async function getUserPoints(token: string, userId: string): Promise<number> {
-    console.log("DEBUG getUserPoints dummy:", token, userId)
-    return 100
+    const res = await fetch(`http://localhost:4000/api/points/${userId}`, {
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    if (!res.ok) throw new Error("ポイント取得失敗")
+    const data = await res.json()
+    return data.point
   }
-    
 
-    // const res = await fetch("http://localhost:4000/api/points", {
-    //   cache: "no-store",
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // })
-    // if (!res.ok) throw new Error("ポイント取得失敗")
-    // const data = await res.json()
-    // return data.balance
-  // }
-  
-  export async function getPointHistory(userId: string): Promise<PointTransaction[]> {
-    console.log("DEBUG getPointHistory dummy:", userId)
-    return [] // 仮で空配列を返す
+// ポイント履歴（いつ何ポイントもらった・使った）
+  export async function getPointHistory(token: string,userId: string): Promise<PointTransaction[]> {
+    const res = await fetch(`http://localhost:4000/api/points/${userId}/history`, {
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    if (!res.ok) throw new Error("履歴取得失敗")
+    return await res.json()
   }
   
-  // export async function getPointHistory(userId: string, token: string): Promise<PointTransaction[]> {
-  //   const res = await fetch(`http://localhost:4000/api/points/${userId}/history`, {
-  //     cache: "no-store",
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   })
-  //   if (!res.ok) throw new Error("履歴取得失敗")
-  //   return res.json()
-  // }
-  
+// ポイントを使う
   export async function spendPoints(rewardId: string, token: string) {
     const res = await fetch(`http://localhost:4000/api/rewards/${rewardId}/exchange`, {
       method: "POST",

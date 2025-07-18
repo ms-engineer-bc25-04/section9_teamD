@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -52,5 +52,29 @@ export const grantPoint = async (req: Request, res: Response) => {
     res.json({ message: "ポイント付与成功", data: created });
   } catch (err) {
     res.status(400).json({ message: 'ポイント付与失敗', error: err });
+  }
+};
+
+// 4. ポイント交換
+export const spendPoint = async (req: Request, res: Response) => {
+  const { userId, points } = req.body;
+
+  if (!userId || !points) { 
+    return res.status(400).json({ message: '必要な情報が不足しています' });
+  }
+
+  try {
+    const grantedAt = new Date();
+    const created = await prisma.point.create({
+      data: {
+        userId,
+        eventId: "reward-system", // ダミーイベントID（スキーマ変更不要）
+        points: -points,
+        grantedAt,
+      }
+    });
+    return res.json({ message: '交換が完了しました！', data: created });
+  } catch (err) {
+    return res.status(400).json({ message: '交換に失敗しました', error: err });
   }
 };
