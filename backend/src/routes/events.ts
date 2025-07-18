@@ -13,104 +13,36 @@ import {
   requireAuth,
   requireStaff,
   requireAdmin,
+  requireParent,
 } from "../middlewares/auth-middleware";
 
 const router = Router();
 
 // ＊＊一般公開OK＊＊
 // GET イベント一覧取得
-router.get("/", getEvents);
+router.get("/", requireAuth, getEvents);
 // GET 特定のイベント取得
-router.get("/:id", getEventById);
+router.get("/:id", requireAuth, getEventById);
 
-// ＊＊ログインしたユーザーだけアクセスできる＊＊
+// ＊＊保護者だけアクセスできる＊＊
 // イベント参加申込
-router.post("/:eventId/apply", requireAuth, applyEvent);
+router.post("/:eventId/apply", requireAuth, requireParent, applyEvent);
 // イベントキャンセル
-router.post("/:eventId/cancel", requireAuth, cancelEvent);
+router.post("/:eventId/cancel", requireAuth, requireParent, cancelEvent);
 // イベント参加者一覧取得
-router.get("/:id/participants", requireAuth, getEventParticipants);
+router.get(
+  "/:id/participants",
+  requireAuth,
+  requireStaff,
+  getEventParticipants
+);
 
 // ＊＊管理者のみアクセスできる＊＊
 // POST 新規イベント作成
 router.post("/", requireAuth, requireAdmin, createEvent);
 // PUT イベント更新
-router.put("/:id", requireAuth, requireStaff, updateEvent);
+router.put("/:id", requireAuth, requireAdmin, updateEvent);
 // DELETE イベント削除
-router.delete("/:id", requireAuth, requireStaff, deleteEvent);
+router.delete("/:id", requireAuth, requireAdmin, deleteEvent);
 
 export default router;
-
-// // GET イベント一覧取得
-// router.get("/", async (req, res, next) => {
-//   try {
-//     await getEvents(req, res);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
-// // GET 特定のイベント取得
-// router.get("/:id", async (req, res, next) => {
-//   try {
-//     await getEventById(req, res);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
-// // GET イベント参加者取得
-// router.get("/:id/participants", async (req, res, next) => {
-//   try {
-//     await getEventParticipants(req, res);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
-// // POST 新規イベント作成
-// router.post("/", async (req, res, next) => {
-//   try {
-//     await createEvent(req, res);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
-// // PUT イベント更新
-// router.put("/:id", async (req, res, next) => {
-//   try {
-//     await updateEvent(req, res);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
-// // DELETE イベント削除
-// router.delete("/:id", async (req, res, next) => {
-//   try {
-//     await deleteEvent(req, res);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
-// // POST イベント申込
-// router.post("/:eventId/apply", async (req, res, next) => {
-//   try {
-//     await applyEvent(req, res);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
-// // POST イベントキャンセル
-// router.post("/:eventId/cancel", async (req, res, next) => {
-//   try {
-//     await cancelEvent(req, res);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
-// export default router;

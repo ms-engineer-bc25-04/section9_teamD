@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../../prisma/client";
 
-// /api/me のGETリクエストで自分のプロフィールを取得する
+//  GETリクエストで自分のプロフィールを取得する
 export const getMyProfile = async (req: Request, res: Response) => {
   const firebaseUser = (req as any).user;
   const uid = firebaseUser?.uid;

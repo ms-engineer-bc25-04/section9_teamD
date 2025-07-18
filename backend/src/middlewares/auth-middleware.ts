@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import admin from "firebase-admin";
 import dotenv from "dotenv";
+import prisma from "../../prisma/client";
 
 dotenv.config();
 
@@ -15,44 +16,74 @@ if (!admin.apps.length) {
   });
 }
 
-// ログイン必須ミドルウェア
+// 認証　DBからユーザー情報を取得して、req.userにセットする
 // async function requireAuth ... だったのを、asyncを外してPromise型を避ける！
-export function requireAuth(req: Request, res: Response, next: NextFunction) {
+export async function requireAuth(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const authHeader = req.headers.authorization;
   if (!authHeader?.startsWith("Bearer ")) {
     res.status(401).json({ error: "Unauthorized" });
     return;
   }
   const idToken = authHeader.split(" ")[1];
-  // Promise型で返さず .then().catch() で記述するのがポイント！
-  admin
-    .auth()
-    .verifyIdToken(idToken)
-    .then((decodedToken) => {
-      // req.userに認証情報をセット
-      (req as any).user = decodedToken;
-      next();
-    })
-    .catch((err) => {
-      res.status(401).json({ error: "Invalid or expired token" });
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const firebaseUid = decodedToken.uid;
+
+    // ユーザー情報をDBから取得
+    const user = await prisma.user.findUnique({
+      where: { firebaseUid },
     });
+
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    // 認証成功　ユーザー情報をreq.userにセット
+    req.user = {
+      id: user.id,
+      name: user.name,
+      role: user.role,
+      isAdmin: user.isAdmin,
+    };
+    next();
+  } catch (error) {
+    console.error("認証エラー", error);
+    res.status(401).json({ error: "Invalid or expired token" });
+  }
 }
 
 // ロール（職員かどうか）確認用ミドルウェア例
 export function requireStaff(req: Request, res: Response, next: NextFunction) {
-  const user = (req as any).user;
-  if (user?.role === "staff" || user?.isAdmin) {
+  console.log("👤 ロール確認:", req.user);
+
+  const user = req.user;
+  if (user?.role === "staff") {
     next();
   } else {
-    res.status(403).json({ error: "Forbidden: staff only" });
+    res.status(403).json({ error: "職員専用です" });
   }
 }
 
 export function requireAdmin(req: Request, res: Response, next: NextFunction) {
-  const user = (req as any).user;
+  const user = req.user;
   if (user?.role === "admin" || user?.isAdmin === true) {
     next();
   } else {
     res.status(403).json({ error: "管理者専用です" });
+  }
+}
+
+export function requireParent(req: Request, res: Response, next: NextFunction) {
+  const user = req.user;
+  if (user?.role === "parent") {
+    next();
+  } else {
+    res.status(403).json({ error: "保護者専用です" });
   }
 }
