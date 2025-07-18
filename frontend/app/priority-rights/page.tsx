@@ -1,23 +1,24 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { Header } from "@/components/layout/header" // 正しいパスに修正
-import { MobileNav } from "@/components/layout/mobile-nav" // 正しいパスに修正
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card" // 正しいパスに修正
-import { Award, Info, Clock, CheckCircle } from "lucide-react" // lucide-reactからインポート
-import { getUserPriorityRights } from "@/actions/priority-rights" // 正しいパスに修正
-import type { PriorityRight } from "@/actions/priority-rights" // actions/priority-rightsから型をインポート
+// import { useRouter } from "next/navigation"
+import { Header } from "@/components/layout/header"
+import { MobileNav } from "@/components/layout/mobile-nav"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Award, Info, Clock, CheckCircle } from "lucide-react"
+// import { getUserPriorityRights } from "@/actions/priority-rights"
+import type { PriorityRight } from "@/actions/priority-rights"
 
 export default function PriorityRightsPage() {
-  const router = useRouter()
+  // NOTE: 今後、ページ遷移や編集機能が必要になった場合にrouterを有効化
+  // const router = useRouter()
   const [userPriorityRights, setUserPriorityRights] = useState<PriorityRight[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
-  // デモ用のユーザーID (実際には認証システムから取得)
+  // NOTE: 認証が実装されたら本物のユーザーIDで差し替える
   const userId = "user1"
 
-  // 優先権情報をロード
+  // TODO: 本番実装時はAPI経由で優先権データを取得するよう切り替える
   // useEffect(() => {
   //   const loadPriorityRights = async () => {
   //     setIsLoading(true)
@@ -30,7 +31,8 @@ export default function PriorityRightsPage() {
 
 useEffect(() => {
   setIsLoading(true)
-  // 本来は getUserPriorityRights(userId) を呼ぶが、ダミーデータで上書き
+  // NOTE: デモのためダミーデータをセット
+  // FIXME: 仮のデータなので、期限切れロジックなどは未考慮
   setTimeout(() => {
     setUserPriorityRights([
       {
@@ -42,22 +44,23 @@ useEffect(() => {
         expirationDate: "2025-10-04",
         dateUsed: undefined,
         dateAcquired: "2025-07-22",
+        // TODO: 本番はポイント数もプロパティとして管理する
         // pointsUsed: 100,
       }
     ])
     setIsLoading(false)
-  }, 600) // 読み込み演出のため0.6秒待機
+  }, 600) // NOTE: ローディング演出のため0.6秒待機
 }, [userId])
 
-
+  // NOTE: statusごとのバッジ色を返す関数。状態増えたらここで管理
   const getStatusColor = (status: "未使用" | "使用済み" | "期限切れ") => {
     switch (status) {
       case "未使用":
-        return "bg-accent text-accent-foreground" // ピンク
+        return "bg-accent text-accent-foreground"
       case "使用済み":
-        return "bg-secondary/50 text-secondary-foreground" // 変更: より目立つセカンダリカラーの薄いバージョン
+        return "bg-secondary/50 text-secondary-foreground"
       case "期限切れ":
-        return "bg-destructive text-destructive-foreground" // 赤
+        return "bg-destructive text-destructive-foreground"
       default:
         return ""
     }
